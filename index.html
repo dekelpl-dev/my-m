@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#f5f0e8">
+<title>התכנית של דקל</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f0e8;
+    --surface: #ffffff;
+    --surface2: #f0ebe0;
+    --border: rgba(0,0,0,0.08);
+    --border2: rgba(0,0,0,0.12);
+    --accent: #2a9d5c;
+    --accent-light: #e8f7ef;
+    --danger: #d64045;
+    --danger-light: #fdeaea;
+    --warning: #e07b28;
+    --warning-light: #fef3e8;
+    --success: #2a9d5c;
+    --success-light: #e8f7ef;
+    --info: #2563a8;
+    --info-light: #e8f0fc;
+    --text: #1a1a2e;
+    --muted: #8a8a9a;
+    --tap: rgba(0,0,0,0.04);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    font-family: 'Heebo', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    height: 100%;
+    direction: rtl;
+    overscroll-behavior: none;
+  }
+
+  /* ---- BOTTOM NAV ---- */
+  .app-wrap {
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+  }
+
+  .top-bar {
+    background: var(--accent);
+    border-bottom: none;
+    padding: 14px 16px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .top-title { font-size: 17px; font-weight: 900; color: #fff; }
+  .top-sub { font-size: 11px; color: rgba(255,255,255,0.75); margin-top: 1px; }
+
+  .balance-tag {
+    font-size: 12px;
+    font-weight: 700;
+    padding: 5px 12px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.22);
+    color: #fff;
+    transition: all 0.4s;
+  }
+
+  .scroll-area {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 14px 14px 80px;
+    background: var(--bg);
+  }
+
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0; right: 0;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    display: flex;
+    padding: 6px 0 max(6px, env(safe-area-inset-bottom));
+    z-index: 200;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.07);
+  }
+
+  .nav-item {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; gap: 3px; padding: 6px 4px;
+    cursor: pointer; border-radius: 10px; transition: background 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .nav-item:active { background: var(--surface2); }
+
+  .nav-icon { font-size: 20px; line-height: 1; }
+  .nav-label { font-size: 10px; font-weight: 600; color: var(--muted); }
+  .nav-item.active .nav-label { color: var(--accent); }
+
+  .page { display: none; }
+  .page.active { display: block; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.05);
+  }
+
+  .card-header {
+    padding: 12px 14px 10px;
+    border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .card-title { font-size: 13px; font-weight: 700; color: var(--text); }
+
+  .badge { font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 20px; }
+  .badge-red { background: var(--danger-light); color: var(--danger); }
+  .badge-yellow { background: var(--warning-light); color: var(--warning); }
+  .badge-green { background: var(--success-light); color: var(--success); }
+  .badge-blue { background: var(--info-light); color: var(--info); }
+
+  .prog-wrap { padding: 14px; }
+  .prog-top { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+  .prog-top span:last-child { color: var(--accent); font-weight: 700; }
+  .prog-track { height: 10px; background: var(--surface2); border-radius: 5px; overflow: hidden; }
+  .prog-fill { height: 100%; border-radius: 5px; background: linear-gradient(90deg, var(--accent), #5cbf8a); transition: width 0.6s ease; }
+
+  .month-tabs {
+    display: flex; gap: 7px; overflow-x: auto;
+    padding: 0 0 4px; margin-bottom: 12px; scrollbar-width: none;
+  }
+  .month-tabs::-webkit-scrollbar { display: none; }
+
+  .mtab {
+    flex-shrink: 0; padding: 7px 14px; border-radius: 20px;
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    border: 1.5px solid var(--border); background: var(--surface);
+    color: var(--muted); transition: all 0.2s;
+  }
+  .mtab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .mtab.completed { border-color: var(--accent); color: var(--accent); background: var(--success-light); }
+
+  .mpanel { display: none; }
+  .mpanel.active { display: block; }
+
+  .flow-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 14px; border-bottom: 1px solid var(--border); font-size: 13px;
+  }
+  .flow-row:last-child { border-bottom: none; }
+  .flow-label { color: var(--muted); }
+  .flow-val { font-weight: 700; }
+  .in { color: var(--success); }
+  .out { color: var(--danger); }
+  .neu { color: var(--info); }
+
+  .result-strip {
+    display: flex; justify-content: space-between;
+    background: var(--surface2); padding: 11px 14px;
+    border-radius: 12px; margin: 4px 0 12px;
+    font-size: 14px; font-weight: 700; color: var(--text);
+  }
+
+  .task-item {
+    display: flex; align-items: flex-start; gap: 11px;
+    padding: 13px 14px; border-bottom: 1px solid var(--border);
+    cursor: pointer; transition: background 0.12s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .task-item:last-child { border-bottom: none; }
+  .task-item:active { background: var(--surface2); }
+  .task-item.done { opacity: 0.45; }
+
+  .chk {
+    width: 22px; height: 22px; border-radius: 7px;
+    border: 2px solid var(--border); flex-shrink: 0; margin-top: 1px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; transition: all 0.2s; color: transparent;
+  }
+  .task-item.done .chk { background: var(--success); border-color: var(--success); color: #fff; }
+
+  .task-body { flex: 1; }
+  .task-text { font-size: 13px; line-height: 1.45; color: var(--text); }
+  .task-item.done .task-text { text-decoration: line-through; color: var(--muted); }
+
+  .urg {
+    display: inline-block; font-size: 10px; font-weight: 700;
+    padding: 2px 7px; border-radius: 8px; margin-top: 4px;
+  }
+  .u-now { background: var(--danger-light); color: var(--danger); }
+  .u-week { background: var(--warning-light); color: var(--warning); }
+  .u-ongoing { background: var(--success-light); color: var(--success); }
+
+  .budget-center { padding: 16px 14px; text-align: center; }
+  .budget-amt { font-size: 52px; font-weight: 900; color: var(--warning); line-height: 1; margin: 8px 0; transition: color 0.3s; }
+  .budget-sub { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+  .budget-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+  .btn-big {
+    padding: 14px; border-radius: 14px; border: none;
+    font-family: 'Heebo', sans-serif; font-size: 16px; font-weight: 700;
+    cursor: pointer; transition: transform 0.1s; -webkit-tap-highlight-color: transparent;
+  }
+  .btn-big:active { transform: scale(0.96); }
+  .btn-plus { background: var(--accent); color: #fff; }
+  .btn-minus { background: var(--surface2); color: var(--text); border: 1.5px solid var(--border); }
+  .btn-reset-full {
+    width: 100%; padding: 11px; border-radius: 12px;
+    border: 1.5px solid var(--border); background: transparent;
+    color: var(--muted); font-family: 'Heebo', sans-serif;
+    font-size: 13px; font-weight: 600; cursor: pointer;
+  }
+  .bbar-wrap { margin-bottom: 10px; }
+  .bbar-track { height: 10px; background: var(--surface2); border-radius: 5px; overflow: hidden; }
+  .bbar-fill { height: 100%; border-radius: 5px; transition: width 0.35s, background 0.35s; }
+  .bbar-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-top: 5px; }
+
+  .rule-row {
+    display: flex; align-items: center; gap: 12px; padding: 14px;
+    border-bottom: 1px solid var(--border); cursor: pointer;
+    -webkit-tap-highlight-color: transparent; transition: background 0.12s;
+  }
+  .rule-row:last-child { border-bottom: none; }
+  .rule-row:active { background: var(--surface2); }
+  .rule-row.rule-done { opacity: 0.35; }
+
+  .rdot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .rdot-red { background: var(--danger); }
+  .rdot-yellow { background: var(--warning); }
+  .rdot-green { background: var(--success); }
+  .rule-text { font-size: 13px; line-height: 1.45; color: var(--text); }
+
+  .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+  .stat-box {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 14px; text-align: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+  .stat-lbl { font-size: 11px; color: var(--muted); margin-bottom: 6px; font-weight: 500; }
+  .stat-num { font-size: 24px; font-weight: 900; }
+
+  .note-strip {
+    background: var(--warning-light); border: 1px solid rgba(224,123,40,0.25);
+    border-radius: 12px; padding: 11px 13px; font-size: 12px;
+    color: var(--warning); line-height: 1.6; margin-bottom: 12px; font-weight: 500;
+  }
+
+  .toast {
+    position: fixed; bottom: 80px; left: 50%;
+    transform: translateX(-50%) translateY(60px);
+    background: var(--text); color: #fff;
+    padding: 10px 20px; border-radius: 20px;
+    font-size: 13px; font-weight: 600; transition: transform 0.25s;
+    z-index: 999; white-space: nowrap; pointer-events: none;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  .section-lbl {
+    font-size: 11px; font-weight: 700; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.8px; margin: 14px 0 8px;
+  }
+
+  .aug-banner {
+    background: linear-gradient(135deg, var(--success-light), var(--info-light));
+    border: 1.5px solid var(--accent); border-radius: 16px;
+    padding: 18px; text-align: center; margin-bottom: 12px; display: none;
+  }
+  .aug-banner.show { display: block; }
+  .aug-banner h3 { font-size: 20px; color: var(--accent); margin-bottom: 4px; }
+  .aug-banner p { font-size: 13px; color: var(--muted); }
+
+  .proj-item {
+    display: flex; align-items: center; gap: 10px; padding: 12px 14px;
+    border-bottom: 1px solid var(--border); cursor: pointer;
+    -webkit-tap-highlight-color: transparent; transition: background 0.12s;
+  }
+  .proj-item:last-child { border-bottom: none; }
+  .proj-item:active { background: var(--surface2); }
+  .proj-item.proj-done { opacity: 0.4; }
+
+  .proj-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .dot-potential { background: var(--muted); }
+  .dot-inprog { background: var(--warning); }
+  .dot-confirmed { background: var(--success); }
+
+  .proj-body { flex: 1; }
+  .proj-name { font-size: 13px; font-weight: 600; color: var(--text); }
+  .proj-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .proj-amt { font-size: 15px; font-weight: 800; color: var(--success); flex-shrink: 0; }
+  .proj-del { color: var(--muted); font-size: 16px; padding: 4px 6px; cursor: pointer; }
+
+  .gap-row { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .gap-row:last-child { border-bottom: none; }
+  .gap-ok { color: var(--success); font-weight: 700; }
+  .gap-short { color: var(--danger); font-weight: 700; }
+
+  input[type=range] { width: 100%; accent-color: var(--accent); height: 4px; }
+  input[type=text], input[type=number] {
+    background: var(--surface2) !important; color: var(--text) !important;
+    border: 1.5px solid var(--border) !important;
+  }
+  input::placeholder { color: var(--muted) !important; }
+  select { background: var(--surface2) !important; color: var(--text) !important; border: 1.5px solid var(--border) !important; }
+
+  /* lock screen */
+  #lock-screen { position:fixed;inset:0;background:var(--accent);display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column; }
+  #lock-screen.hidden { display:none; }
+  .lock-box { background:#fff;border-radius:24px;padding:36px 28px;text-align:center;width:88%;max-width:340px;box-shadow:0 8px 40px rgba(0,0,0,0.15); }
+  .lock-icon { font-size:48px;margin-bottom:12px; }
+  .lock-title { font-size:20px;font-weight:900;color:var(--text);margin-bottom:4px; }
+  .lock-sub { font-size:13px;color:var(--muted);margin-bottom:20px; }
+  .pin-field { width:100%;padding:14px 16px;border-radius:12px;border:1.5px solid rgba(0,0,0,0.12);font-size:16px;font-family:Heebo,sans-serif;text-align:center;outline:none;background:#f8f8f8;color:var(--text);margin-bottom:12px; }
+  .pin-field:focus { border-color:var(--accent); }
+  .pin-submit { width:100%;padding:14px;border-radius:14px;border:none;background:var(--accent);color:#fff;font-size:16px;font-weight:700;cursor:pointer;font-family:Heebo,sans-serif; }
+  .lock-err { font-size:12px;color:var(--danger);margin-top:8px;min-height:18px; }
+</style>
+</head>
+<body>
+
+<div id="lock-screen">
+  <div class="lock-box">
+    <div class="lock-icon">🔐</div>
+    <div class="lock-title">התכנית של דקל</div>
+    <div class="lock-sub">הכנס סיסמה</div>
+    <input type="password" class="pin-field" id="pinField" placeholder="סיסמה" onkeydown="if(event.key==='Enter')checkPin()">
+    <button class="pin-submit" onclick="checkPin()">כניסה</button>
+    <div class="lock-err" id="lockErr"></div>
+  </div>
+</div>
+
+<div class="app-wrap">
+
+  <div class="top-bar">
+    <div>
+      <div class="top-title">התכנית של דקל ✦</div>
+      <div class="top-sub">אפריל — אוגוסט 2026</div>
+    </div>
+    <div class="balance-tag" id="balanceTag">מינוס ₪30K</div>
+  </div>
+
+  <div class="scroll-area" id="scrollArea">
+
+    <!-- PAGE: בית -->
+    <div class="page active" id="page-home">
+
+      <div class="card">
+        <div class="prog-wrap">
+          <div class="prog-top">
+            <span>התקדמות כוללת</span>
+            <span id="progPct">0%</span>
+          </div>
+          <div class="prog-track">
+            <div class="prog-fill" id="progFill" style="width:0%"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-lbl">משימות הושלמו</div>
+          <div class="stat-num" id="statDone" style="color:var(--success)">0</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-lbl">נשארו השבוע</div>
+          <div class="stat-num" id="statLeft" style="color:var(--warning)">₪500</div>
+        </div>
+      </div>
+
+      <div class="section-lbl">חודש פעיל</div>
+      <div class="month-tabs" id="homeTabs">
+        <div class="mtab active" onclick="homeTab(0)" id="ht0">אפריל</div>
+        <div class="mtab" onclick="homeTab(1)" id="ht1">מאי</div>
+        <div class="mtab" onclick="homeTab(2)" id="ht2">יוני</div>
+        <div class="mtab" onclick="homeTab(3)" id="ht3">יולי</div>
+        <div class="mtab" onclick="homeTab(4)" id="ht4">אוגוסט</div>
+      </div>
+
+      <div class="mpanel active" id="mp0">
+        <span class="badge badge-red" style="margin-bottom:10px;display:inline-block;">דחוף — עכשיו</span>
+        <div class="card">
+          <div class="flow-row"><span class="flow-label">פריסת כאל</span><span class="flow-val in">+ ₪6,000</span></div>
+          <div class="flow-row"><span class="flow-label">השלמת משכורת</span><span class="flow-val in">+ ₪5,000</span></div>
+          <div class="flow-row"><span class="flow-label">קרן קולנוע גליל</span><span class="flow-val in">+ ₪6,000</span></div>
+          <div class="flow-row"><span class="flow-label">הלוואה מהבנק</span><span class="flow-val neu">+ ₪25,000</span></div>
+          <div class="flow-row"><span class="flow-label">סגירת מינוס + כרטיסים</span><span class="flow-val out">- ₪40,000</span></div>
+        </div>
+        <div class="result-strip"><span>יתרה צפויה</span><span class="in">~₪2,000+</span></div>
+      </div>
+
+      <div class="mpanel" id="mp1">
+        <span class="badge badge-yellow" style="margin-bottom:10px;display:inline-block;">לחוץ</span>
+        <div class="note-strip">חודש לחוץ — אפס מסעדות, קנייה שבועית אחת בלבד.</div>
+        <div class="card">
+          <div class="flow-row"><span class="flow-label">משכורת + הידברות</span><span class="flow-val in">~₪18,800</span></div>
+          <div class="flow-row"><span class="flow-label">משכנתא + הלוואות</span><span class="flow-val out">- ₪8,530</span></div>
+          <div class="flow-row"><span class="flow-label">כרטיסי אשראי</span><span class="flow-val out">- ₪10,000</span></div>
+          <div class="flow-row"><span class="flow-label">מעון + ביטוחים</span><span class="flow-val out">- ₪5,800</span></div>
+          <div class="flow-row"><span class="flow-label">מזון (תקציב)</span><span class="flow-val out">- ₪2,000</span></div>
+        </div>
+        <div class="result-strip"><span>גירעון</span><span style="color:var(--warning)">~₪7,500</span></div>
+      </div>
+
+      <div class="mpanel" id="mp2">
+        <span class="badge badge-yellow" style="margin-bottom:10px;display:inline-block;">לחוץ</span>
+        <div class="card">
+          <div class="flow-row"><span class="flow-label">משכורת + הידברות</span><span class="flow-val in">~₪18,800</span></div>
+          <div class="flow-row"><span class="flow-label">משכנתא + הלוואות</span><span class="flow-val out">- ₪8,530</span></div>
+          <div class="flow-row"><span class="flow-label">כרטיסי אשראי</span><span class="flow-val out">- ₪10,000</span></div>
+          <div class="flow-row"><span class="flow-label">מעון + ביטוחים</span><span class="flow-val out">- ₪5,800</span></div>
+          <div class="flow-row"><span class="flow-label">מזון (תקציב)</span><span class="flow-val out">- ₪2,000</span></div>
+        </div>
+        <div class="result-strip"><span>גירעון</span><span style="color:var(--warning)">~₪7,500</span></div>
+      </div>
+
+      <div class="mpanel" id="mp3">
+        <span class="badge badge-green" style="margin-bottom:10px;display:inline-block;">משתפר</span>
+        <div class="note-strip">החודש האחרון עם מעון — ₪3,700 משתחררים באוגוסט!</div>
+        <div class="card">
+          <div class="flow-row"><span class="flow-label">משכורת + הידברות</span><span class="flow-val in">~₪18,800</span></div>
+          <div class="flow-row"><span class="flow-label">משכנתא + הלוואות</span><span class="flow-val out">- ₪8,530</span></div>
+          <div class="flow-row"><span class="flow-label">כרטיסי אשראי</span><span class="flow-val out">- ₪8,000</span></div>
+          <div class="flow-row"><span class="flow-label">מעון — חודש אחרון</span><span class="flow-val out">- ₪3,703</span></div>
+          <div class="flow-row"><span class="flow-label">קבועות + מזון</span><span class="flow-val out">- ₪4,000</span></div>
+        </div>
+        <div class="result-strip"><span>גירעון</span><span style="color:var(--warning)">~₪5,400</span></div>
+      </div>
+
+      <div class="mpanel" id="mp4">
+        <span class="badge badge-blue" style="margin-bottom:10px;display:inline-block;">נקודת מפנה!</span>
+        <div class="aug-banner" id="augBanner">
+          <h3>הגעת לאיזון! 🎉</h3>
+          <p>4 חודשים של משמעת — עשית את זה דקל</p>
+        </div>
+        <div class="card">
+          <div class="flow-row"><span class="flow-label">משכורת + הידברות</span><span class="flow-val in">~₪18,800</span></div>
+          <div class="flow-row"><span class="flow-label">משכנתא + הלוואות</span><span class="flow-val out">- ₪8,530</span></div>
+          <div class="flow-row"><span class="flow-label">כרטיסי אשראי</span><span class="flow-val out">- ₪7,000</span></div>
+          <div class="flow-row"><sp
