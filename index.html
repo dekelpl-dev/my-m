@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#2a9d5c">
+<title>התכנית של דקל</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f5f0e8;--surface:#fff;--surface2:#f0ebe0;
+  --border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.12);
+  --accent:#2a9d5c;--accent-light:#e8f7ef;
+  --danger:#d64045;--danger-light:#fdeaea;
+  --warning:#e07b28;--warning-light:#fef3e8;
+  --success:#2a9d5c;--success-light:#e8f7ef;
+  --info:#2563a8;--info-light:#e8f0fc;
+  --text:#1a1a2e;--muted:#8a8a9a;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);height:100%;direction:rtl;overscroll-behavior:none;}
+.app-wrap{display:flex;flex-direction:column;height:100dvh;}
+.top-bar{background:var(--accent);padding:14px 16px 12px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;}
+.top-title{font-size:17px;font-weight:900;color:#fff;}
+.top-sub{font-size:11px;color:rgba(255,255,255,0.75);margin-top:1px;}
+.balance-tag{font-size:12px;font-weight:700;padding:5px 12px;border-radius:20px;background:rgba(255,255,255,0.22);color:#fff;transition:all 0.4s;}
+.scroll-area{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px 80px;background:var(--bg);}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);display:flex;padding:6px 0 max(6px,env(safe-area-inset-bottom));z-index:200;box-shadow:0 -2px 10px rgba(0,0,0,0.07);}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 4px;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.nav-item:active{background:var(--surface2);}
+.nav-icon{font-size:20px;line-height:1;}
+.nav-label{font-size:10px;font-weight:600;color:var(--muted);}
+.nav-item.active .nav-label{color:var(--accent);}
+.page{display:none;}
+.page.active{display:block;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:12px;box-shadow:0 1px 5px rgba(0,0,0,0.05);}
+.badge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;}
+.badge-red{background:var(--danger-light);color:var(--danger);}
+.badge-yellow{background:var(--warning-light);color:var(--warning);}
+.badge-green{background:var(--success-light);color:var(--success);}
+.badge-blue{background:var(--info-light);color:var(--info);}
+.prog-wrap{padding:14px;}
+.prog-top{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:8px;}
+.prog-top span:last-child{color:var(--accent);font-weight:700;}
+.prog-track{height:10px;background:var(--surface2);border-radius:5px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--accent),#5cbf8a);transition:width 0.6s;}
+.month-tabs{display:flex;gap:7px;overflow-x:auto;padding:0 0 4px;margin-bottom:12px;scrollbar-width:none;}
+.month-tabs::-webkit-scrollbar{display:none;}
+.mtab{flex-shrink:0;padding:7px 14px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:var(--surface);color:var(--muted);transition:all 0.2s;}
+.mtab.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+.mtab.completed{border-color:var(--accent);color:var(--accent);background:var(--success-light);}
+.mpanel{display:none;}
+.mpanel.active{display:block;}
+.flow-row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid var(--border);font-size:13px;}
+.flow-row:last-child{border-bottom:none;}
+.flow-label{color:var(--muted);}
+.flow-val{font-weight:700;}
+.in{color:var(--success);}
+.out{color:var(--danger);}
+.neu{color:var(--info);}
+.result-strip{display:flex;justify-content:space-between;background:var(--surface2);padding:11px 14px;border-radius:12px;margin:4px 0 12px;font-size:14px;font-weight:700;color:var(--text);}
+.task-item{display:flex;align-items:flex-start;gap:11px;padding:13px 14px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.12s;-webkit-tap-highlight-color:transparent;}
+.task-item:last-child{border-bottom:none;}
+.task-item:active{background:var(--surface2);}
+.task-item.done{opacity:0.45;}
+.chk{width:22px;height:22px;border-radius:7px;border:2px solid var(--border);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all 0.2s;color:transparent;}
+.task-item.done .chk{background:var(--success);border-color:var(--success);color:#fff;}
+.task-body{flex:1;}
+.task-text{font-size:13px;line-height:1.45;color:var(--text);}
+.task-item.done .task-text{text-decoration:line-through;color:var(--muted);}
+.urg{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;margin-top:4px;}
+.u-now{background:var(--danger-light);color:var(--danger);}
+.u-week{background:var(--warning-light);color:var(--warning);}
+.u-ongoing{background:var(--success-light);color:var(--success);}
+.budget-center{padding:16px 14px;text-align:center;}
+.budget-amt{font-size:52px;font-weight:900;color:var(--warning);line-height:1;margin:8px 0;transition:color 0.3s;}
+.budget-sub{font-size:13px;color:var(--muted);margin-bottom:14px;}
+.budget-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+.btn-big{padding:14px;border-radius:14px;border:none;font-family:'Heebo',sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:transform 0.1s;-webkit-tap-highlight-color:transparent;}
+.btn-big:active{transform:scale(0.96);}
+.btn-plus{background:var(--accent);color:#fff;}
+.btn-minus{background:var(--surface2);color:var(--text);border:1.5px solid var(--border);}
+.btn-reset-full{width:100%;padding:11px;border-radius:12px;border:1.5px solid var(--border);background:transparent;color:var(--muted);font-family:'Heebo',sans-serif;font-size:13px;font-weight:600;cursor:pointer;}
+.bbar-track{height:10px;background:var(--surface2);border-radius:5px;overflow:hidden;margin-bottom:5px;}
+.bbar-fill{height:100%;border-radius:5px;transition:width 0.35s,background 0.35s;}
+.bbar-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);}
+.rule-row{display:flex;align-items:center;gap:12px;padding:14px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.12s;}
+.rule-row:last-child{border-bottom:none;}
+.rule-row:active{background:var(--surface2);}
+.rule-row.rule-done{opacity:0.35;}
+.rdot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.rdot-red{background:var(--danger);}
+.rdot-yellow{background:var(--warning);}
+.rdot-green{background:var(--success);}
+.rule-text{font-size:13px;line-height:1.45;color:var(--text);}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.stat-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:14px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,0.04);}
+.stat-lbl{font-size:11px;color:var(--muted);margin-bottom:6px;font-weight:500;}
+.stat-num{font-size:24px;font-weight:900;}
+.note-strip{background:var(--warning-light);border:1px solid rgba(224,123,40,0.25);border-radius:12px;padding:11px 13px;font-size:12px;color:var(--warning);line-height:1.6;margin-bottom:12px;font-weight:500;}
+.section-lbl{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin:14px 0 8px;}
+.aug-banner{background:linear-gradient(135deg,var(--success-light),var(--info-light));border:1.5px solid var(--accent);border-radius:16px;padding:18px;text-align:center;margin-bottom:12px;display:none;}
+.aug-banner.show{display:block;}
+.aug-banner h3{font-size:20px;color:var(--accent);margin-bottom:4px;}
+.aug-banner p{font-size:13px;color:var(--muted);}
+.proj-item{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.12s;}
+.proj-item:last-child{border-bottom:none;}
+.proj-item:active{background:var(--surface2);}
+.proj-item.proj-done{opacity:0.4;}
+.proj-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.dot-potential{background:var(--muted);}
+.dot-inprog{background:var(--warning);}
+.dot-confirmed{background:var(--success);}
+.proj-body{flex:1;}
+.proj-name{font-size:13px;font-weight:600;color:var(--text);}
+.proj-meta{font-size:11px;color:var(--muted);margin-top:2px;}
+.proj-amt{font-size:15px;font-weight:800;color:var(--success);flex-shrink:0;}
+.proj-del{color:var(--muted);font-size:16px;padding:4px 6px;cursor:pointer;}
+.gap-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px;}
+.gap-row:last-child{border-bottom:none;}
+.gap-ok{color:var(--success);font-weight:700;}
+.gap-short{color:var(--danger);font-weight:700;}
+input[type=range]{width:100%;accent-color:var(--accent);}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--text);color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;transition:transform 0.25s;z-index:999;white-space:nowrap;pointer-events:none;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div class="app-wrap">
+<div class="top-bar">
+  <div>
+    <div class="top-title">התכנית של דקל ✦</div>
+    <div class="top-sub">אפריל — אוגוסט 2026</div>
+  </div>
+  <div class="balance-tag" id="balanceTag">מינוס ₪30K</div>
+</div>
+<div class="scroll-area" id="scrollArea">
+
+<!-- בית -->
+<div class="page active" id="page-home">
+  <div class="card"><div class="prog-wrap">
+    <div class="prog-top"><span>התקדמות כוללת</span><span id="progPct">0%</span></div>
+    <div class="prog-track"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+  </div></div>
+  <div class="stats-grid">
+    <div class="stat-box"><div class="stat-lbl">משימות הושלמו</div><div class="stat-num" id="statDone" style="color:var(--success)">0</div></div>
+    <div class="stat-box"><div class="stat-lbl">נשארו השבוע</div><div class="stat-num" id="statLeft" style="color:var(--warning)">₪500</div></div>
+  </div>
+  <div class="section-lbl">חודש פעיל</div>
+  <div class="month-tabs" id="homeTabs">
+    <div class="mtab active" onclick="homeTab(0)" id="ht0">אפריל</div>
+    <div class="mtab" onclick="homeTab(1)" id="ht1">מאי</div>
+    <div class="mtab" onclick="homeTab(2)" id="ht2">יוני</div>
+    <div class="mtab" onclick="homeTab(3)" id="ht3">יולי</div>
+    <div class="mtab" onclick="homeTab(4)" id="ht4">אוגוסט</div>
+  </div>
+  <div class="mpanel active" id="mp0">
+    <span class="badge badge-red" style="margin-bottom:10px;display:inline-block;">דחוף — עכשיו</span>
+    <div class="card">
+      <div class="flow-row"><span class="flow-label">פריסת כאל</span><span class="flow-val in">+ ₪6,000</span></div>
+      <div class="flow-row"><span class="flow-label">השלמת משכורת</span><span class="flow-val in">+ ₪5,000</span></div>
+      <div class="flow-row"><span class="flow-label">קרן קולנוע גליל</span><span class="flow-val in">+ ₪6,000</span></div>
+      <div class="flow-row"><span class="flow-label">הלוואה מהבנק</span><span class="flow-val neu">+ ₪25,000</span></div>
+      <div class="flow-row"><span class="flow-label">סגירת מינוס + כרטיסים</span><span class="flow-val out">- ₪40,000</span></div>
+    </div>
+    <div class="result-strip"><span>יתרה צפויה</span><span class="in">~₪2,000+</span></div>
+  </div>
+  <div class="mpanel" id="mp1">
+    <span class="badge badge-yellow" style="margin-bottom:10px;display:inline-block;">לחוץ</span>
+    <div class="note-strip">חודש לחוץ — אפס מסעדות, קנייה שבועית אחת בלבד.</div>
+    <div class="card">
+      <div class="flow-row"><span class="flow-label">משכורת + הידברות</span><span class="flow-val in">~₪18,800</span></div>
+      <div class="flow-row"><span class="flow-label">משכנתא + הלוואות</span><span class="flow-val out">- ₪8,530</span></div>
+      <div class="flow-row"><span class="flow-label">כרטיסי אשראי</span><span class="flow-val out">- ₪10,000</span></div>
+      <div class="flow-row"><span class="flow-label">מעון + ביטוחים</span><span class="flow-val out">- ₪5,800</span></div>
+      <div class="flow-row"><span class="flow-label">מזון (תקציב)</span><span class="flow-val out">- ₪2,000</span></div>
+    </div>
+    <div class="result-strip"><span>גירעון</span><span style="color:var(--warning)">~₪7,500</span></div>
+  </div>
+  <div class="mpanel" id="mp2">
+    <span class="badge badge-yellow" style="margin-bottom:10px;display:inline-block;">לחוץ</span>
+    <div class="card">
+      <div class="flow-row"><span class="flow-label">משכורת + הידברות</span><span class="flow-val in">~₪18,800</span></div>
+      <div class="flow-row"><span class="flow-label">משכנתא + הלוואות</span><span class="flow-val out">- ₪8,530</span></div>
+      <div class="flow-row"><span class="flow-label">כרטיסי אשראי</span><span class="flow-val out">- ₪10,000</span></div>
+      <div class="flow-row"><span class="flow-label">מעון + ביטוחים</span><span class="flow-val out">- ₪5,800</span></div>
+      <div class="flow-row"><span class="flow-label">מזון (תקציב)</span><span class="flow-val out">- ₪2,000</span></div>
+    </div>
+    <div class="result-strip"><span>גירעון</span><span style="color:var(--warning)">~₪7,500</span></div>
+  </div>
+  <div class="mpanel" id="mp3">
+    <span class="badge badge-green" style="margin-bottom:10px;display:inline-block;">משתפר</span>
+    <div class="note-strip">החודש האחרון עם מעון — ₪3,700 משתחררים באוגוסט!</div>
+    <div class="card">
+      <div class="flow-row"><span class="flow-label">משכורת + הידברות</span><span class="flow-val in">~₪18,800</span></div>
+      <div class="flow-row"><span class="flow-label">משכנתא + הלוואות</span><span class="flow-val out">- ₪8,530</span></div>
+      <div class="flow-row"><span class="flow-label">כרטיסי אשראי</span><span class="flow-val out">- ₪8,000</span></div>
+      <div class="flow-row"><span class="flow-label">מעון — חודש אחרון</span><span class="flow-val out">- ₪3,703</span></div>
+      <div class="flow-row"><span class="flow-label">קבועות + מזון</span><span class="flow-val out">- ₪4,000</span></div>
+    </div>
+    <div class="result-strip"><span>גירעון</span><span style="color:var(--warning)">~₪5,400</span></div>
+  </div>
+  <div class="mpanel" id="mp4">
+    <span class="badge badge-blue" style="margin-bottom:10px;display:inline-block;">נקודת מפנה!</span>
+    <div class="aug-banner" id="augBanner"><h3>הגעת לאיזון! 🎉</h3><p>4 חודשים של משמעת — עשית את זה דקל</p></div>
+    <div class="card">
+      <div class="flow-row"><span class="flow-label">משכורת + הידברות</span><span class="flow-val in">~₪18,800</span></div>
+      <div class="flow-row"><span class="flow-label">משכנתא + הלוואות</span><span class="flow-val out">- ₪8,530</span></div>
+      <div class="flow-row"><span class="flow-label">כרטיסי אשראי</span><span class="flow-val out">- ₪7,000</span></div>
+      <div class="flow-row"><span class="flow-label">מעון — ₪0!</span><span class="flow-val in">₪0</span></div>
+      <div class="flow-row"><span class="flow-label">קבועות + מזון</span><span class="flow-val out">- ₪4,000</span></div>
+    </div>
+    <div class="result-strip" style="background:var(--success-light);border:1px solid rgba(42,157,92,0.2)">
+      <span style="color:var(--success)">עודף ראשון!</span><span style="color:var(--success)">~₪730+</span>
+    </div>
+  </div>
+  <div class="section-lbl">משימות החודש</div>
+  <div class="card" id="homeTaskList"></div>
+</div>
+
+<!-- תקציב -->
+<div class="page" id="page-budget">
+  <div class="card">
+    <div class="budget-center">
+      <div style="font-size:13px;color:var(--muted)">תקציב מזון שבועי</div>
+      <div class="budget-amt" id="budgetAmt">₪0</div>
+      <div class="budget-sub" id="budgetSub">נשאר ₪500 השבוע</div>
+      <div style="margin-bottom:14px;">
+        <div class="bbar-track"><div class="bbar-fill" id="bbar" style="width:0%;background:var(--success)"></div></div>
+        <div class="bbar-labels"><span>₪0</span><span>₪250</span><span>₪500</span></div>
+      </div>
+      <div class="budget-btns">
+        <button class="btn-big btn-minus" onclick="spend(-50)">- ₪50</button>
+        <button class="btn-big btn-plus" onclick="spend(50)">+ ₪50</button>
+      </div>
+      <div class="budget-btns" style="margin-bottom:12px;">
+        <button class="btn-big btn-minus" style="font-size:13px" onclick="spend(-100)">- ₪100</button>
+        <button class="btn-big btn-plus" style="font-size:13px" onclick="spend(100)">+ ₪100</button>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:4px;">
+        <input type="number" id="customAmt" placeholder="סכום ידני" inputmode="numeric"
+          style="flex:1;padding:12px;border-radius:12px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);font-family:Heebo,sans-serif;font-size:15px;text-align:center;outline:none;">
+        <button onclick="spendCustom(-1)" style="padding:12px;border-radius:12px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);font-family:Heebo,sans-serif;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">- הפחת</button>
+        <button onclick="spendCustom(1)" style="padding:12px;border-radius:12px;border:none;background:var(--accent);color:#fff;font-family:Heebo,sans-serif;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">+ הוסף</button>
+      </div>
+    </div>
+    <div style="padding:0 14px 14px;">
+      <button class="btn-reset-full" onclick="resetBudget()">איפוס — שבוע חדש</button>
+    </div>
+  </div>
+  <div class="section-lbl">5 כללי ברזל</div>
+  <div class="card" id="rulesList"></div>
+</div>
+
+<!-- משימות -->
+<div class="page" id="page-tasks">
+  <div class="month-tabs" id="taskTabs">
+    <div class="mtab active" onclick="taskTab(0)" id="tt0">אפריל</div>
+    <div class="mtab" onclick="taskTab(1)" id="tt1">מאי</div>
+    <div class="mtab" onclick="taskTab(2)" id="tt2">יוני</div>
+    <div class="mtab" onclick="taskTab(3)" id="tt3">יולי</div>
+    <div class="mtab" onclick="taskTab(4)" id="tt4">אוגוסט</div>
+  </div>
+  <div class="card" id="fullTaskList"></div>
+</div>
+
+<!-- פרויקטים -->
+<div class="page" id="page-projects">
+  <div class="card" style="margin-bottom:12px;">
+    <div style="padding:14px;">
+      <div style="font-size:13px;color:var(--muted);margin-bottom:6px;">הגירעון החודשי שצריך לכסות</div>
+      <div style="font-size:28px;font-weight:900;color:var(--danger)">₪7,500</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px;">ל-3 חודשים = <span id="proj-total-gap" style="color:var(--warning);font-weight:700;">₪22,500</span></div>
+    </div>
+  </div>
+  <div class="section-lbl">פרויקטים עתידיים</div>
+  <div class="card" id="projList"></div>
+  <div style="padding:4px 0 12px;">
+    <div style="display:flex;gap:8px;margin-bottom:8px;">
+      <input type="text" id="projName" placeholder="שם הפרויקט / לקוח" style="flex:1;padding:12px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:Heebo,sans-serif;font-size:13px;direction:rtl;outline:none;">
+      <input type="text" id="projMonth" placeholder="חודש" style="width:80px;padding:12px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:Heebo,sans-serif;font-size:13px;direction:rtl;outline:none;">
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:8px;">
+      <input type="number" id="projAmt" placeholder="סכום צפוי (₪)" style="flex:1;padding:12px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:Heebo,sans-serif;font-size:13px;direction:rtl;outline:none;">
+      <select id="projStatus" style="width:100px;padding:12px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:Heebo,sans-serif;font-size:12px;direction:rtl;outline:none;">
+        <option value="potential">פוטנציאל</option>
+        <option value="inprog">בתהליך</option>
+        <option value="confirmed">מאושר</option>
+      </select>
+    </div>
+    <button onclick="addProject()" style="width:100%;padding:14px;border-radius:14px;border:none;background:var(--info);color:#fff;font-family:Heebo,sans-serif;font-size:15px;font-weight:700;cursor:pointer;">+ הוסף פרויקט</button>
+  </div>
+  <div class="card" style="margin-bottom:12px;">
+    <div style="padding:14px;">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.8px;">סיכום לפי חודש</div>
+      <div id="projSummary"></div>
+    </div>
+  </div>
+  <div class="card" style="margin-bottom:12px;">
+    <div style="padding:14px;">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.8px;">פער נדרש לסגירה</div>
+      <div id="projGapDetail"></div>
+    </div>
+  </div>
+</div>
+
+<!-- יציאה -->
+<div class="page" id="page-exit" style="padding:14px 14px 80px;">
+  <div style="display:flex;gap:8px;margin-bottom:14px;">
+    <div id="etab-loans" onclick="exitTab('loans')" style="flex:1;text-align:center;padding:10px;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;background:var(--info);color:#fff;border:1px solid var(--info);">הלוואות</div>
+    <div id="etab-mortgage" onclick="exitTab('mortgage')" style="flex:1;text-align:center;padding:10px;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;background:var(--surface);color:var(--muted);border:1px solid var(--border);">משכנתא</div>
+  </div>
+  <div id="exit-loans-panel">
+    <div class="section-lbl">כל ההתחייבויות החודשיות</div>
+    <div class="card" style="margin-bottom:12px;">
+      <div class="flow-row"><span class="flow-label">הלוואה קיימת (₪85K)</span><span class="flow-val out">₪1,270</span></div>
+      <div class="flow-row"><span class="flow-label">הלוואה חדשה (₪25K)</span><span class="flow-val out">₪760</span></div>
+      <div class="flow-row"><span class="flow-label">ביטוח לאומי</span><span class="flow-val out">₪919</span></div>
+      <div class="flow-row"><span class="flow-label">ביטוחים (הראל + טפחות)</span><span class="flow-val out">₪450</span></div>
+      <div class="flow-row"><span class="flow-label">חשמל + פרטנר + שב"ן</span><span class="flow-val out">₪1,565</span></div>
+      <div class="flow-row"><span class="flow-label">הוראות קבע אחרות</span><span class="flow-val out">₪600</span></div>
+      <div style="display:flex;justify-content:space-between;padding:10px 14px;background:var(--surface2);font-size:14px;font-weight:800;">
+        <span>סה"כ התחייבויות</span><span style="color:var(--danger)">₪5,564</span>
+      </div>
+    </div>
+    <div class="section-lbl">כוונן את תכנית היציאה</div>
+    <div class="card" style="margin-bottom:12px;"><div style="padding:14px;">
+      <div style="margin-bottom:14px;">
+        <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:6px;"><span>הכנסה חודשית קבועה</span><span style="color:var(--text);font-weight:700" id="val-income">₪18,800</span></div>
+        <input type="range" min="10000" max="40000" step="500" value="18800" id="sl-income" oninput="exitCalc()">
+      </div>
+      <div style="margin-bottom:14px;">
+        <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:6px;"><span>הוצאות שוטפות (מזון, דלק)</span><span style="color:var(--text);font-weight:700" id="val-expenses">₪4,500</span></div>
+        <input type="range" min="2000" max="12000" step="500" value="4500" id="sl-expenses" oninput="exitCalc()">
+      </div>
+      <div style="margin-bottom:14px;">
+        <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:6px;"><span>סכום חוב הלוואות לפירעון</span><span style="color:var(--text);font-weight:700" id="val-debt">₪110,000</span></div>
+        <input type="range" min="20000" max="200000" step="5000" value="110000" id="sl-debt" oninput="exitCalc()">
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:6px;"><span>תוספת חודשית לפירעון מוקדם</span><span style="color:var(--info);font-weight:700" id="val-extra">₪0</span></div>
+        <input type="range" min="0" max="5000" step="100" value="0" id="sl-extra" oninput="exitCalc()">
+      </div>
+    </div></div>
+    <div class="card" style="margin-bottom:12px;"><div style="padding:14px;">
+      <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:12px;">תמונת המצב החודשית</div>
+      <div class="flow-row"><span class="flow-label">הכנסה</span><span id="r-income" style="font-weight:700;color:var(--success)">₪18,800</span></div>
+      <div class="flow-row"><span class="flow-label">התחייבויות קבועות</span><span style="font-weight:700;color:var(--danger)">- ₪5,564</span></div>
+      <div class="flow-row"><span class="flow-label">הוצאות שוטפות</span><span id="r-expenses" style="font-weight:700;color:var(--danger)">- ₪4,500</span></div>
+      <div style="display:flex;justify-content:space-between;padding:10px 14px;font-size:14px;font-weight:800;border-bottom:1px solid var(--border);">
+        <span>פנוי לפירעון/חיסכון</span><span id="exit-free" style="font-weight:800;font-size:15px">₪0</span>
+      </div>
+      <div class="flow-row"><span class="flow-label">סיום הלוואות — ללא תוספת</span><span id="exit-years-base" style="font-weight:700">5 שנים</span></div>
+      <div class="flow-row"><span class="flow-label">סיום עם תוספת פירעון</span><span id="exit-years-extra" style="font-weight:700;color:var(--success)">5 שנים</span></div>
+      <div class="flow-row"><span class="flow-label">חיסכון בריבית</span><span id="exit-interest-saved" style="font-weight:700;color:var(--success)">₪0</span></div>
+    </div></div>
+    <div class="section-lbl">ציר זמן</div>
+    <div class="card" style="margin-bottom:12px;"><div id="exit-timeline" style="padding:4px 0;"></div></div>
+    <div class="card" style="margin-bottom:12px;background:var(--info-light);border-color:rgba(37,99,168,0.2);">
+      <div style="padding:14px;">
+        <div style="font-size:13px;font-weight:700;color:var(--info);margin-bottom:8px;">המסר</div>
+        <div id="exit-message" style="font-size:13px;color:var(--text);line-height:1.6;"></div>
+      </div>
+    </div>
+  </div>
+  <div id="exit-mortgage-panel" style="display:none;">
+    <div class="section-lbl">פרטי המשכנתא</div>
+    <div class="card" style="margin-bottom:12px;">
+      <div class="flow-row"><span class="flow-label">יתרה לסילוק</span><span class="flow-val">₪342,610</span></div>
+      <div class="flow-row"><span class="flow-label">החזר חודשי כולל</span><span class="flow-val out">₪6,499</span></div>
+      <div class="flow-row"><span class="flow-label">ריבית ממוצעת</span><span class="flow-val">~3.5%</span></div>
+      <div class="flow-row"><span class="flow-label">שנים משוערות לסיום</span><span class="flow-val">~24 שנים</span></div>
+    </div>
+    <div class="note-strip">המשכנתא מגובה בנכס — אל תפרע אותה לפני שסגרת הלוואות בריבית גבוהה יותר.</div>
+    <div class="section-lbl">מה קורה אם תוסיף פירעון מוקדם?</div>
+    <div class="card" style="margin-bottom:12px;"><div style="padding:14px;">
+      <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:6px;"><span>תוספת חודשית</span><span style="color:var(--info);font-weight:700" id="m-val-extra">₪0</span></div>
+      <input type="range" min="0" max="3000" step="100" value="0" id="m-sl-extra" oninput="mortgageCalc()">
+    </div></div>
+    <div class="card" style="margin-bottom:12px;"><div style="padding:14px;">
+      <div class="flow-row"><span class="flow-label">סיום ללא תוספת</span><span class="flow-val" style="color:var(--warning)">~2048</span></div>
+      <div class="flow-row"><span class="flow-label">סיום עם תוספת</span><span id="m-years-extra" class="flow-val" style="color:var(--success)">~2048</span></div>
+      <div class="flow-row"><span class="flow-label">חיסכון בריבית</span><span id="m-saved" class="flow-val" style="color:var(--success)">₪0</span></div>
+    </div></div>
+    <div class="section-lbl">ציר זמן משכנתא</div>
+    <div class="card" style="margin-bottom:12px;"><div id="m-timeline" style="padding:4px 0;"></div></div>
+    <div class="card" style="margin-bottom:12px;background:var(--success-light);border-color:rgba(42,157,92,0.2);">
+      <div style="padding:14px;">
+        <div style="font-size:13px;font-weight:700;color:var(--success);margin-bottom:8px;">נכס vs חוב</div>
+        <div style="font-size:13px;color:var(--text);line-height:1.6;">הדירה שלך שווה כנראה ₪1.5M+. המשכנתא היא ₪342K. ההון העצמי שלך בנכס הוא מעל מיליון שקל — זה הנכס הכי גדול שלך.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end scroll-area -->
+
+<nav class="bottom-nav">
+  <div class="nav-item active" id="nav-home" onclick="navTo('home')"><div class="nav-icon">🏠</div><div class="nav-label">בית</div></div>
+  <div class="nav-item" id="nav-tasks" onclick="navTo('tasks')"><div class="nav-icon">✅</div><div class="nav-label">משימות</div></div>
+  <div class="nav-item" id="nav-budget" onclick="navTo('budget')"><div class="nav-icon">💰</div><div class="nav-label">תקציב</div></div>
+  <div class="nav-item" id="nav-projects" onclick="navTo('projects')"><div class="nav-icon">🎯</div><div class="nav-label">פרויקטים</div></div>
+  <div class="nav-item" id="nav-exit" onclick="navTo('exit')"><div class="nav-icon">🚀</div><div class="nav-label">יציאה</div></div>
+</nav>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const KEY='dakel_v4';
+const TASKS=[
+  [{t:'שלח מייל לבנקאית לבקשת הלוואה',u:'now',ul:'היום'},{t:'קבע פגישה בבנק',u:'now',ul:'היום'},{t:'משוך ₪500 מזומן לשבוע הראשון',u:'now',ul:'היום'},{t:'בטל מנויים: פנגו, נ.פ תשבץ, DARIMPO',u:'week',ul:'השבוע'},{t:'בדוק ריבית מסטרקארד — בקש הפחתה',u:'week',ul:'השבוע'}],
+  [{t:'אפס מסעדות — כלל ברזל',u:'ongoing',ul:'כל החודש'},{t:'קנייה שבועית אחת בלבד — יום קבוע',u:'ongoing',ul:'כל החודש'},{t:'בקש פריסה מכאל + ישראכרט ל-12 חודש',u:'now',ul:'בהקדם'},{t:'בדוק עם הבנק — הלוואות מענק מה קורה?',u:'week',ul:'השבוע'},{t:'מעקב יתרה כל יום ראשון',u:'ongoing',ul:'שבועי'}],
+  [{t:'המשך אפס מסעדות',u:'ongoing',ul:'כל החודש'},{t:'בדוק שהלוואת המענק הראשונה (מאי) נסגרה',u:'now',ul:'בהקדם'},{t:'כל בונוס מהידברות → ישירות לחוב',u:'ongoing',ul:'שוטף'},{t:'מעקב יתרה כל יום ראשון',u:'ongoing',ul:'שבועי'}],
+  [{t:'תכנן לאן הולכים ₪3,700 שמשתחררים באוגוסט',u:'week',ul:'השבוע'},{t:'המשך אפס מסעדות',u:'ongoing',ul:'כל החודש'},{t:'בדוק שהלוואת המענק השנייה (יוני) נסגרה',u:'now',ul:'בהקדם'},{t:'מעקב יתרה כל יום ראשון',u:'ongoing',ul:'שבועי'}],
+  [{t:'₪3,700 לשעבר מעון — מחצית לחובות, מחצית לחיסכון',u:'now',ul:'תחילת חודש'},{t:'בנה תכנית לחודשי הסתיו',u:'week',ul:'השבוע'},{t:'חגוג — הגעת לאיזון!',u:'ongoing',ul:'מגיע לך!'}]
+];
+const RULES=[
+  {t:'₪500 מזומן בשבוע — נגמר הכסף, נגמרת הקנייה',c:'red'},
+  {t:'קנייה אחת בשבוע — יום קבוע בלבד',c:'red'},
+  {t:'מסעדות = ₪0 עד שהמינוס מתחת ₪5,000',c:'red'},
+  {t:'מעקב יתרה כל יום ראשון — 5 דקות',c:'yellow'},
+  {t:'כל בונוס מהידברות → ישירות לחוב',c:'green'}
+];
+let S={done:{},rules:{},spend:0,curPage:'home',homeMonth:0,taskMonth:0,projects:[]};
+function load(){try{const d=localStorage.getItem(KEY);if(d)S={...S,...JSON.parse(d)};}catch(e){}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1800);}
+function navTo(page){
+  document.querySelectorAll('.page').forEach(p=>{p.classList.remove('active');p.style.display='none';});
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const el=document.getElementById('page-'+page);
+  el.classList.add('active');el.style.display='block';
+  document.getElementById('nav-'+page).classList.add('active');
+  document.getElementById('scrollArea').scrollTop=0;
+  S.curPage=page;save();
+}
+function homeTab(idx){
+  document.querySelectorAll('.mpanel').forEach((p,i)=>p.classList.toggle('active',i===idx));
+  document.querySelectorAll('#homeTabs .mtab').forEach((t,i)=>{
+    t.classList.remove('active','completed');
+    const allDone=TASKS[i].every((_,ti)=>S.done[i+'_'+ti]);
+    if(i===idx)t.classList.add('active');
+    else if(allDone)t.classList.add('completed');
+  });
+  S.homeMonth=idx;renderHomeTaskList();save();
+}
+function taskTab(idx){
+  document.querySelectorAll('#taskTabs .mtab').forEach((t,i)=>{
+    t.classList.remove('active','completed');
+    const allDone=TASKS[i].every((_,ti)=>S.done[i+'_'+ti]);
+    if(i===idx)t.classList.add('active');
+    else if(allDone)t.classList.add('completed');
+  });
+  S.taskMonth=idx;renderFullTasks();save();
+}
+function toggleTask(mi,ti){
+  const k=mi+'_'+ti;S.done[k]=!S.done[k];save();
+  renderHomeTaskList();renderFullTasks();updateProgress();
+  toast(S.done[k]?'✓ בוצע!':'ביטול סימון');
+}
+function renderTaskList(mi,containerId){
+  const c=document.getElementById(containerId);if(!c)return;c.innerHTML='';
+  TASKS[mi].forEach((task,ti)=>{
+    const k=mi+'_'+ti,done=!!S.done[k];
+    const uc={now:'u-now',week:'u-week',ongoing:'u-ongoing'}[task.u];
+    const d=document.createElement('div');
+    d.className='task-item'+(done?' done':'');
+    d.innerHTML=`<div class="chk">${done?'✓':''}</div><div class="task-body"><div class="task-text">${task.t}</div><span class="urg ${uc}">${task.ul}</span></div>`;
+    d.onclick=()=>toggleTask(mi,ti);c.appendChild(d);
+  });
+}
+function renderHomeTaskList(){renderTaskList(S.homeMonth||0,'homeTaskList');}
+function renderFullTasks(){renderTaskList(S.taskMonth||0,'fullTaskList');}
+function renderRules(){
+  const c=document.getElementById('rulesList');c.innerHTML='';
+  RULES.forEach((r,ri)=>{
+    const done=!!S.rules[ri];
+    const d=document.createElement('div');
+    d.className='rule-row'+(done?' rule-done':'');
+    d.innerHTML=`<div class="rdot rdot-${r.c}"></div><div class="rule-text">${r.t}</div>`;
+    d.onclick=()=>{S.rules[ri]=!S.rules[ri];save();renderRules();toast(S.rules[ri]?'מחויב!':'ביטול');};
+    c.appendChild(d);
+  });
+}
+function updateProgress(){
+  const total=TASKS.flat().length,done=Object.values(S.done).filter(Boolean).length;
+  const pct=Math.round((done/total)*100);
+  document.getElementById('progFill').style.width=pct+'%';
+  document.getElementById('progPct').textContent=pct+'%';
+  document.getElementById('statDone').textContent=done;
+  const tag=document.getElementById('balanceTag');
+  if(pct>=70)tag.textContent='בדרך לאיזון! 🌱';
+  else if(pct>=30)tag.textContent='מתקדם...';
+  else tag.textContent='מינוס ₪30K';
+  if(pct===100)document.getElementById('augBanner').classList.add('show');
+}
+function spend(amt){S.spend=Math.max(0,Math.min(700,S.spend+amt));save();renderBudget();}
+function spendCustom(dir){
+  const val=parseInt(document.getElementById('customAmt').value)||0;
+  if(val<=0){toast('הכנס סכום תקין');return;}
+  S.spend=Math.max(0,Math.min(700,S.spend+dir*val));save();renderBudget();
+  document.getElementById('customAmt').value='';
+  toast(dir>0?'+ ₪'+val+' נוסף':'- ₪'+val+' הופחת');
+}
+function resetBudget(){S.spend=0;save();renderBudget();toast('שבוע חדש — ₪500 מזומן 💪');}
+function renderBudget(){
+  const sp=S.spend,left=500-sp,pct=Math.min(100,(sp/500)*100);
+  document.getElementById('budgetAmt').textContent='₪'+sp;
+  document.getElementById('statLeft').textContent=left>=0?'₪'+left:'-₪'+Math.abs(left);
+  const bar=document.getElementById('bbar');
+  bar.style.width=pct+'%';
+  bar.style.background=pct>=100?'var(--danger)':pct>=80?'var(--warning)':'var(--success)';
+  document.getElementById('budgetAmt').style.color=pct>=100?'var(--danger)':'var(--warning)';
+  const sub=document.getElementById('budgetSub');
+  if(left<0)sub.textContent='⚠️ חרגת ב-₪'+Math.abs(left)+' — עצור!';
+  else if(left===0)sub.textContent='נגמר התקציב השבועי';
+  else sub.textContent='נשאר ₪'+left+' השבוע';
+}
+function addProject(){
+  const name=document.getElementById('projName').value.trim();
+  const month=document.getElementById('projMonth').value.trim();
+  const amt=parseInt(document.getElementById('projAmt').value)||0;
+  const status=document.getElementById('projStatus').value;
+  if(!name||!amt){toast('מלא שם וסכום');return;}
+  S.projects.push({id:Date.now(),name,month,amt,status,received:false});
+  document.getElementById('projName').value='';
+  document.getElementById('projMonth').value='';
+  document.getElementById('projAmt').value='';
+  save();renderProjects();toast('פרויקט נוסף!');
+}
+function toggleProjectReceived(id){
+  const p=S.projects.find(p=>p.id===id);
+  if(p){p.received=!p.received;save();renderProjects();toast(p.received?'₪ התקבל!':'ביטול');}
+}
+function deleteProject(id){S.projects=S.projects.filter(p=>p.id!==id);save();renderProjects();}
+function renderProjects(){
+  const list=document.getElementById('projList');if(!list)return;
+  if(S.projects.length===0){list.innerHTML='<div style="padding:20px;text-align:center;color:var(--muted);font-size:13px;">עדיין אין פרויקטים — הוסף למטה</div>';return;}
+  list.innerHTML='';
+  [...S.projects].sort((a,b)=>{const mo=['מאי','יוני','יולי','אוגוסט'];return(mo.indexOf(a.month)||99)-(mo.indexOf(b.month)||99);}).forEach(p=>{
+    const sl={potential:'פוטנציאל',inprog:'בתהליך',confirmed:'מאושר'}[p.status];
+    const dc={potential:'dot-potential',inprog:'dot-inprog',confirmed:'dot-confirmed'}[p.status];
+    const d=document.createElement('div');
+    d.className='proj-item'+(p.received?' proj-done':'');
+    d.innerHTML=`<div class="proj-dot ${dc}"></div><div class="proj-body" onclick="toggleProjectReceived(${p.id})"><div class="proj-name">${p.name}${p.received?' ✓':''}</div><div class="proj-meta">${p.month?p.month+' · ':''}${sl}</div></div><div class="proj-amt">₪${p.amt.toLocaleString()}</div><div class="proj-del" onclick="deleteProject(${p.id})">✕</div>`;
+    list.appendChild(d);
+  });
+  renderProjSummary();
+}
+function renderProjSummary(){
+  const summary=document.getElementById('projSummary'),gapDetail=document.getElementById('projGapDetail');
+  if(!summary)return;
+  const months=['מאי','יוני','יולי'],gaps={'מאי':7500,'יוני':7500,'יולי':5400},totalGap=22500;
+  const byMonth={};months.forEach(m=>byMonth[m]=0);
+  S.projects.forEach(p=>{if(!p.received&&byMonth[p.month]!==undefined)byMonth[p.month]+=p.amt;});
+  const totalExpected=Object.values(byMonth).reduce((a,b)=>a+b,0);
+  const confirmedTotal=S.projects.filter(p=>p.status==='confirmed'&&!p.received).reduce((a,p)=>a+p.amt,0);
+  document.getElementById('proj-total-gap').textContent='₪'+totalGap.toLocaleString();
+  summary.innerHTML='';
+  months.forEach(m=>{
+    const inc=byMonth[m],gap=gaps[m],diff=inc-gap;
+    const row=document.createElement('div');row.className='gap-row';
+    row.innerHTML=`<span style="color:var(--muted)">${m}</span><span style="color:var(--info)">₪${inc.toLocaleString()} צפוי</span><span class="${diff>=0?'gap-ok':'gap-short'}">${diff>=0?'✓ +₪'+diff.toLocaleString():'חסר ₪'+Math.abs(diff).toLocaleString()}</span>`;
+    summary.appendChild(row);
+  });
+  gapDetail.innerHTML='';
+  const totalDiff=totalExpected-totalGap;
+  [{label:'סה"כ 3 חודשים',val:totalDiff>=0?'✓ עודף ₪'+totalDiff.toLocaleString():'חסר ₪'+Math.abs(totalDiff).toLocaleString(),cls:totalDiff>=0?'gap-ok':'gap-short'},
+   {label:'פרויקטים מאושרים',val:'₪'+confirmedTotal.toLocaleString(),style:'color:var(--success);font-weight:700'},
+   {label:'עוד צריך להשיג',val:'₪'+Math.max(0,totalGap-confirmedTotal).toLocaleString(),style:`color:${confirmedTotal>=totalGap?'var(--success)':'var(--danger)'};font-weight:700`}
+  ].forEach(item=>{
+    const row=document.createElement('div');row.className='gap-row';
+    row.innerHTML=`<span style="color:var(--muted)">${item.label}</span><span ${item.cls?`class="${item.cls}"`:`style="${item.style}"`}>${item.val}</span>`;
+    gapDetail.appendChild(row);
+  });
+}
+function exitTab(tab){
+  const isLoans=tab==='loans';
+  document.getElementById('exit-loans-panel').style.display=isLoans?'block':'none';
+  document.getElementById('exit-mortgage-panel').style.display=isLoans?'none':'block';
+  document.getElementById('etab-loans').style.cssText=`flex:1;text-align:center;padding:10px;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;background:${isLoans?'var(--info)':'var(--surface)'};color:${isLoans?'#fff':'var(--muted)'};border:1px solid ${isLoans?'var(--info)':'var(--border)'};`;
+  document.getElementById('etab-mortgage').style.cssText=`flex:1;text-align:center;padding:10px;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;background:${isLoans?'var(--surface)':'var(--accent)'};color:${isLoans?'var(--muted)':'#fff'};border:1px solid ${isLoans?'var(--border)':'var(--accent)'};`;
+  if(!isLoans)mortgageCalc();
+}
+function exitCalc(){
+  const income=parseInt(document.getElementById('sl-income').value);
+  const expenses=parseInt(document.getElementById('sl-expenses').value);
+  const extra=parseInt(document.getElementById('sl-extra').value);
+  const debt=parseInt(document.getElementById('sl-debt').value);
+  document.getElementById('val-income').textContent='₪'+income.toLocaleString();
+  document.getElementById('val-expenses').textContent='₪'+expenses.toLocaleString();
+  document.getElementById('val-extra').textContent='₪'+extra.toLocaleString();
+  document.getElementById('val-debt').textContent='₪'+debt.toLocaleString();
+  document.getElementById('r-income').textContent='₪'+income.toLocaleString();
+  document.getElementById('r-expenses').textContent='- ₪'+expenses.toLocaleString();
+  const FIXED=5564,LOANS=2030,RATE=0.06/12;
+  const free=income-FIXED-expenses-extra;
+  const freeEl=document.getElementById('exit-free');
+  freeEl.textContent=(free>=0?'+₪':'-₪')+Math.abs(free).toLocaleString();
+  freeEl.style.color=free>=0?'var(--success)':'var(--danger)';
+  function mtp(d,pay,r){if(pay<=d*r)return 999;return Math.ceil(Math.log(pay/(pay-d*r))/Math.log(1+r));}
+  function ti(d,pay,r){const m=mtp(d,pay,r);if(m>=999)return 0;return Math.max(0,Math.round(pay*m-d));}
+  const mBase=mtp(debt,LOANS,RATE),mExtra=mtp(debt,LOANS+extra,RATE);
+  const saved=Math.max(0,ti(debt,LOANS,RATE)-ti(debt,LOANS+extra,RATE));
+  const fmt=m=>m>=999?'לא נגמר':m<12?m+' חודשים':(m/12).toFixed(1)+' שנים';
+  const yb=document.getElementById('exit-years-base');
+  yb.textContent=fmt(mBase);yb.style.color=mBase<60?'var(--success)':mBase<96?'var(--warning)':'var(--danger)';
+  const ye=document.getElementById('exit-years-extra');
+  ye.textContent=fmt(mExtra);ye.style.color=mExtra<48?'var(--success)':'var(--warning)';
+  document.getElementById('exit-interest-saved').textContent=extra>0?'₪'+saved.toLocaleString():'₪0';
+  const tl=document.getElementById('exit-timeline');tl.innerHTML='';
+  let rem=debt;const pay=LOANS+extra;const maxY=Math.min(Math.ceil((mExtra>=999?mBase:mExtra)/12),15);
+  for(let y=1;y<=maxY;y++){
+    for(let m=0;m<12;m++){if(rem<=0)break;rem-=Math.min(pay-rem*RATE,rem);if(rem<0)rem=0;}
+    const pct=Math.max(0,Math.round((1-rem/debt)*100));
+    const bc=pct>=80?'var(--success)':pct>=50?'var(--info)':'var(--warning)';
+    const row=document.createElement('div');
+    row.style.cssText='display:flex;align-items:center;gap:10px;padding:8px 14px;border-bottom:1px solid var(--border);font-size:12px;';
+    row.innerHTML=`<span style="color:var(--muted);min-width:40px;">שנה ${y}</span><div style="flex:1;height:8px;background:var(--surface2);border-radius:4px;overflow:hidden;"><div style="height:100%;width:${pct}%;background:${bc};border-radius:4px;"></div></div><span style="min-width:60px;text-align:left;font-weight:600;color:${rem<=0?'var(--success)':'var(--text)'};">${rem<=0?'שולם! ✓':'₪'+Math.round(rem/1000)+'K'}</span>`;
+    tl.appendChild(row);if(rem<=0)break;
+  }
+  const msg=document.getElementById('exit-message');
+  if(free<0){msg.textContent='ההוצאות עולות על ההכנסות. חייב לקצץ לפני שאפשר לפרוע.';msg.style.color='var(--danger)';}
+  else if(extra===0){msg.textContent='גם ללא תוספת, ההלוואות נגמרות. כל ₪500 נוספים קוצרים שנה שלמה.';msg.style.color='var(--text)';}
+  else{msg.textContent=`עם תוספת של ₪${extra.toLocaleString()}/חודש חוסך ₪${saved.toLocaleString()} בריבית ומקצר ${((mBase-mExtra)/12).toFixed(1)} שנים.`;msg.style.color='var(--success)';}
+}
+function mortgageCalc(){
+  const extra=parseInt(document.getElementById('m-sl-extra').value)||0;
+  document.getElementById('m-val-extra').textContent='₪'+extra.toLocaleString();
+  const DEBT=342610,PAY_BASE=6499,RATE=0.035/12;
+  function mtp(d,pay,r){if(pay<=d*r)return 9999;return Math.ceil(Math.log(pay/(pay-d*r))/Math.log(1+r));}
+  const mBase=mtp(DEBT,PAY_BASE,RATE),mExtra=mtp(DEBT,PAY_BASE+extra,RATE);
+  const saved=Math.max(0,Math.round(PAY_BASE*mBase-DEBT-(PAY_BASE+extra)*mExtra+DEBT));
+  document.getElementById('m-years-extra').textContent=extra>0?'~'+(2026+Math.round(mExtra/12)):'~'+(2026+Math.round(mBase/12));
+  document.getElementById('m-saved').textContent=extra>0?'₪'+saved.toLocaleString():'₪0';
+  const tl=document.getElementById('m-timeline');tl.innerHTML='';
+  let rem=DEBT;const pay=PAY_BASE+extra;
+  for(let y=0;y<=25;y+=5){
+    for(let m=0;m<(y===0?0:60);m++){if(rem<=0)break;rem-=Math.min(pay-rem*RATE,rem);if(rem<0)rem=0;}
+    const pct=Math.max(0,Math.round((1-rem/DEBT)*100));
+    const bc=pct>=80?'var(--success)':pct>=50?'var(--info)':'var(--warning)';
+    const row=document.createElement('div');
+    row.style.cssText='display:flex;align-items:center;gap:10px;padding:8px 14px;border-bottom:1px solid var(--border);font-size:12px;';
+    row.innerHTML=`<span style="color:var(--muted);min-width:50px;">${2026+y}</span><div style="flex:1;height:8px;background:var(--surface2);border-radius:4px;overflow:hidden;"><div style="height:100%;width:${pct}%;background:${bc};border-radius:4px;"></div></div><span style="min-width:65px;text-align:left;font-weight:600;color:${rem<=0?'var(--success)':'var(--text)'};">${rem<=0?'שולם! ✓':'₪'+Math.round(rem/1000)+'K'}</span>`;
+    tl.appendChild(row);if(rem<=0)break;
+  }
+}
+load();
+renderHomeTaskList();renderFullTasks();renderRules();renderBudget();updateProgress();
+homeTab(S.homeMonth||0);taskTab(S.taskMonth||0);renderProjects();
+exitCalc();exitTab('loans');mortgageCalc();
+if(S.curPage&&S.curPage!=='home')navTo(S.curPage);
+</script>
+</body>
+</html>
