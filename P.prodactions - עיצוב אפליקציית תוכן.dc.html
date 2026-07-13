@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+  <template id="__bundler_thumbnail"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#122418"/><circle cx="50" cy="50" r="22" fill="#C9A961"/></svg></template>
+  <meta name="design_doc_mode" content="canvas">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body{margin:0;background:#0d0f0c;font-family:'Heebo',system-ui,sans-serif}
+    .dv-turn{padding:40px 44px 60px}
+    .dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 20px}
+    .dv-tid{font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1a1a1a;color:#fff;border-radius:4px;text-decoration:none}
+    .dv-tname{font:600 13px/1.2 system-ui,sans-serif;color:#eee}
+    .dv-opts{display:flex;flex-wrap:wrap;gap:36px;align-items:flex-start}
+    .dv-opt{flex:none;display:flex;flex-direction:column;gap:9px}
+    .dv-oid{font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(255,255,255,.12);color:#fff;border-radius:5px;text-decoration:none}
+    .dv-olabel{display:flex;align-items:baseline;gap:8px;font:400 11px/1.3 system-ui,sans-serif;color:rgba(255,255,255,.55)}
+    .dv-card{max-width:100%;border-radius:10px;box-shadow:0 20px 60px rgba(0,0,0,.5);overflow:hidden}
+    .dv-next{margin:24px 0 0;font:12px/1.5 system-ui,sans-serif;color:rgba(255,255,255,.5)}
+  </style>
+</helmet>
+<section class="dv-turn" id="t1">
+  <div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">עיצוב מחדש — P.prodactions כאפליקציית סטרימינג (כהה, ירוק-זהב)</span></div>
+  <div class="dv-opts">
+
+    <!-- ============ OPTION 1a — Netflix Classic ============ -->
+    <div class="dv-opt" id="1a">
+      <div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a>נטפליקס קלאסי — שורות אופקיות, גיבור מרכזי</div>
+      <div class="dv-card" style="width:1240px">
+        <div dir="rtl" style="position:relative;background:#122418;color:#ECE3CB;font-family:'Heebo',system-ui,sans-serif">
+
+          <!-- NAV -->
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:0 44px;height:72px;background:rgba(9,16,12,.92);border-bottom:1px solid rgba(201,169,97,.18)">
+            <div style="display:flex;align-items:center;gap:10px">
+              <img src="./assets/logo.png" style="height:30px;width:auto;filter:brightness(0) invert(85%) sepia(28%) saturate(800%) hue-rotate(8deg)" alt="P.prodactions"></img>
+              <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:#F4EAD0;letter-spacing:.01em">P<span style="color:#C9A961">.</span>prodactions</div>
+            </div>
+            <div style="display:flex;gap:30px;font-size:14px;color:#B8C5BB;font-weight:500">
+              <span>ראשי</span><span>קטגוריות</span><span>אודות</span><span>יצירת קשר</span>
+            </div>
+          </div>
+
+          <!-- HERO -->
+          <div style="position:relative;padding:96px 44px 84px;text-align:center;overflow:hidden;background:radial-gradient(circle at 50% 30%, rgba(201,169,97,.18), rgba(79,183,168,.05) 45%, transparent 72%)">
+            <div style="font-size:11px;font-weight:600;letter-spacing:.4em;color:#4FB7A8;text-transform:uppercase;margin-bottom:24px">תיק עבודות · Production Portfolio</div>
+            <img src="./assets/logo.png" style="height:88px;width:auto;margin:0 auto 24px;filter:brightness(0) invert(85%) sepia(28%) saturate(800%) hue-rotate(8deg)" alt="P.prodactions"></img>
+            <h1 style="font-family:'Cormorant Garamond',serif;font-size:66px;font-weight:700;color:#F4EAD0;margin:0 0 14px">P.prodactions</h1>
+            <p style="font-size:18px;color:#B8C5BB;margin:0 0 28px">הפקות תוכן, דרמה ותעודה</p>
+            <div style="display:flex;gap:16px;justify-content:center">
+              <div style="padding:14px 30px;border-radius:8px;background:#C9A961;color:#122418;font-weight:700;font-size:15px;cursor:pointer">צפו בשואוריל</div>
+              <div style="padding:14px 30px;border-radius:8px;border:1px solid rgba(201,169,97,.4);color:#F4EAD0;font-weight:600;font-size:15px;cursor:pointer">אודות היוצר</div>
+            </div>
+          </div>
+
+          <!-- ABOUT -->
+          <div style="display:flex;align-items:center;gap:40px;padding:12px 44px 48px;border-bottom:1px solid rgba(201,169,97,.15)">
+            <div style="flex:0 0 140px;width:140px;height:140px">
+              <x-import component-from-global-scope="image-slot" from="./image-slot.js" id="portrait-a" shape="circle" placeholder="תמונת פרופיל" src="./assets/portrait.jpg" hint-size="140px,140px"></x-import>
+            </div>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:11px;font-weight:700;letter-spacing:.12em;color:#4FB7A8;text-transform:uppercase;margin-bottom:8px">אודות</div>
+              <h2 style="font-family:'Cormorant Garamond',serif;font-size:30px;color:#F4EAD0;margin:0 0 4px">דקל פלד</h2>
+              <div style="font-size:14px;color:#6FA88E;font-weight:600;margin-bottom:14px">יוצר · מפיק · בימוי</div>
+              <p style="font-size:15px;line-height:1.8;color:#B8C5BB;margin:0 0 14px;max-width:640px">מפיק תוכן ייחודי לטלוויזיה, דיגיטל ופרסום מזה למעלה משלוש עשרה שנים. מוביל פרויקטים מקצה לקצה — מקונספט ופיתוח, דרך כתיבה ובימוי, ועד עריכה ותוצר סופי.</p>
+              <div style="font-size:13px;color:#C9A961;font-weight:600">ליצירת קשר · 054-591-7314 · dekelpl@gmail.com</div>
+            </div>
+          </div>
+
+          <!-- CATEGORY ROWS -->
+          <sc-for list="{{ catsA }}" as="cat" hint-placeholder-count="4">
+            <div style="padding:32px 44px 8px">
+              <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+                <h2 style="font-family:'Cormorant Garamond',serif;font-size:25px;color:#F4EAD0;font-weight:600;margin:0">{{ cat.label }}</h2>
+                <span style="font-size:12px;color:#7A8A7F">{{ cat.count }} פרויקטים</span>
+              </div>
+              <div style="display:flex;gap:16px;overflow-x:auto;padding-bottom:14px">
+                <sc-for list="{{ cat.projects }}" as="p" hint-placeholder-count="4">
+                  <div onClick="{{ p.open }}" style="flex:0 0 296px;cursor:pointer">
+                    <div style="width:296px;height:167px">
+                      <x-import component-from-global-scope="image-slot" from="./image-slot.js" id="img-a-{{ p.id }}" shape="rounded" radius="10" placeholder="תמונת שער" src="./assets/covers/{{ p.cover }}" hint-size="296px,167px"></x-import>
+                    </div>
+                    <div style="margin-top:10px;font-size:16px;font-weight:600;color:#ECE3CB">{{ p.title }}</div>
+                    <div style="font-size:12.5px;color:#7A8A7F;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ p.desc }}</div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+
+          <!-- FOOTER -->
+          <div style="text-align:center;padding:56px 40px 48px;border-top:1px solid rgba(201,169,97,.15);margin-top:24px">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:26px;color:#F4EAD0;font-weight:600">P.prodactions</div>
+            <div style="font-size:12.5px;color:#7A8A7F;margin-top:6px">Dekel Feld · הפקות תוכן, דרמה ותעודה</div>
+          </div>
+
+          <!-- MODAL -->
+          <sc-if value="{{ modalAOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;inset:0;background:rgba(5,9,8,.86);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:40px;z-index:50">
+              <div style="position:relative;width:100%;max-width:600px;background:#213D2E;border:1px solid rgba(201,169,97,.32);border-radius:16px;padding:34px">
+                <div onClick="{{ modalA.close }}" style="position:absolute;top:16px;left:16px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;cursor:pointer;color:#ECE3CB;font-size:16px">×</div>
+                <div style="font-size:11px;font-weight:700;letter-spacing:.1em;color:#4FB7A8;text-transform:uppercase;margin-bottom:8px">{{ modalA.catLabel }}</div>
+                <h3 style="font-family:'Cormorant Garamond',serif;font-size:30px;color:#F4EAD0;margin:0 0 10px">{{ modalA.title }}</h3>
+                <p style="font-size:14.5px;color:#B8C5BB;line-height:1.75;margin:0 0 20px">{{ modalA.desc }}</p>
+                <sc-if value="{{ modalA.ytId }}" hint-placeholder-val="{{ false }}">
+                  <div style="position:relative;width:100%;padding-top:56.25%;border-radius:10px;overflow:hidden;margin-bottom:14px">
+                    <iframe src="https://www.youtube-nocookie.com/embed/{{ modalA.ytId }}" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen="true"></iframe>
+                  </div>
+                </sc-if>
+                <div style="display:flex;gap:10px">
+                  <input value="{{ modalA.draftValue }}" onChange="{{ modalA.onDraftChange }}" placeholder="הדביקו כאן קישור לסרטון יוטיוב" style="flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(201,169,97,.25);border-radius:8px;padding:10px 14px;color:#ECE3CB;font-size:13.5px;font-family:inherit"></input>
+                  <div onClick="{{ modalA.onSave }}" style="padding:10px 20px;border-radius:8px;background:#C9A961;color:#122418;font-weight:700;font-size:13.5px;cursor:pointer;white-space:nowrap">שמירה</div>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ OPTION 1b — Editorial poster app ============ -->
+    <div class="dv-opt" id="1b">
+      <div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a>אפליקציית עדנה עריכתית — פוסטרים אנכיים, לשוניות קטגוריה</div>
+      <div class="dv-card" style="width:1240px">
+        <div dir="rtl" style="position:relative;background:#122418;color:#ECE3CB;font-family:'Heebo',system-ui,sans-serif">
+
+          <!-- GLASS NAV -->
+          <div style="display:flex;align-items:center;justify-content:center;gap:10px;padding:20px 44px;background:rgba(18,36,24,.65);backdrop-filter:blur(10px);border-bottom:1px solid rgba(201,169,97,.18)">
+            <img src="./assets/logo.png" style="height:26px;width:auto;filter:brightness(0) invert(85%) sepia(28%) saturate(800%) hue-rotate(8deg)" alt="P.prodactions"></img>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:21px;letter-spacing:.1em;color:#F4EAD0">P.PRODACTIONS</div>
+          </div>
+
+          <!-- HERO split -->
+          <div style="display:flex;align-items:center;gap:60px;padding:76px 60px">
+            <div style="flex:1;min-width:0">
+              <img src="./assets/logo.png" style="height:52px;width:auto;margin-bottom:22px;filter:brightness(0) invert(85%) sepia(28%) saturate(800%) hue-rotate(8deg)" alt="P.prodactions"></img>
+              <div style="font-size:11px;font-weight:600;letter-spacing:.35em;color:#4FB7A8;text-transform:uppercase;margin-bottom:22px">תיק עבודות</div>
+              <h1 style="font-family:'Cormorant Garamond',serif;font-size:56px;font-weight:600;color:#F4EAD0;margin:0 0 16px;line-height:1.1">הפקות תוכן,<br>דרמה ותעודה</h1>
+              <p style="font-size:16px;color:#B8C5BB;line-height:1.7;margin:0 0 30px;max-width:420px">דקל פלד — יוצר, מפיק ובמאי. מוביל פרויקטים מקצה לקצה בטלוויזיה, דיגיטל ופרסום.</p>
+              <div style="display:inline-block;padding:13px 32px;border-radius:999px;border:1px solid #C9A961;color:#F4EAD0;font-weight:600;font-size:14.5px;cursor:pointer">לצפייה בעבודות</div>
+            </div>
+            <div style="flex:0 0 340px;width:340px;padding:10px;border:1px solid rgba(201,169,97,.35);border-radius:18px">
+              <div style="width:100%;aspect-ratio:2/3;border-radius:12px;overflow:hidden">
+                <x-import component-from-global-scope="image-slot" from="./image-slot.js" id="hero-poster-b" shape="rect" placeholder="פוסטר ראשי" src="./assets/covers/soul-food.jpg" hint-size="320px,480px"></x-import>
+              </div>
+            </div>
+          </div>
+
+          <!-- ABOUT -->
+          <div style="max-width:720px;margin:0 auto;padding:8px 40px 60px;text-align:center;border-bottom:1px solid rgba(201,169,97,.15)">
+            <div style="width:96px;height:96px;margin:0 auto 20px">
+              <x-import component-from-global-scope="image-slot" from="./image-slot.js" id="portrait-b" shape="circle" placeholder="תמונת פרופיל" src="./assets/portrait.jpg" hint-size="96px,96px"></x-import>
+            </div>
+            <h2 style="font-family:'Cormorant Garamond',serif;font-size:26px;color:#F4EAD0;margin:0 0 4px">דקל פלד</h2>
+            <div style="font-size:13px;color:#4FB7A8;font-weight:600;letter-spacing:.06em;margin-bottom:20px">יוצר · מפיק · בימוי</div>
+            <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:19px;line-height:1.8;color:#B8C5BB;margin:0 0 20px">"מוביל פרויקטים מקצה לקצה — מקונספט ופיתוח, דרך כתיבה ובימוי, ועד עריכה ותוצר סופי. מתמחה בתוכן יהודי-אמוני, סדרות דוקו-תעודה ותכניות אולפן."</p>
+            <div style="font-size:12.5px;color:#7A8A7F">ליצירת קשר · 054-591-7314 · dekelpl@gmail.com</div>
+          </div>
+
+          <!-- TABS -->
+          <div style="display:flex;gap:12px;justify-content:center;padding:30px 40px 6px;flex-wrap:wrap">
+            <sc-for list="{{ catsB }}" as="cat" hint-placeholder-count="4">
+              <div onClick="{{ cat.selectCat }}" style="padding:9px 22px;border-radius:999px;font-size:13.5px;cursor:pointer;background:{{ cat.tabBg }};color:{{ cat.tabColor }};font-weight:{{ cat.tabWeight }};transition:background .2s">{{ cat.label }}</div>
+            </sc-for>
+          </div>
+
+          <!-- POSTER GRID -->
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:26px;padding:24px 44px 70px">
+            <sc-for list="{{ activeCatProjects }}" as="p" hint-placeholder-count="4">
+              <div onClick="{{ p.open }}" style="cursor:pointer">
+                <div style="position:relative;width:100%;aspect-ratio:2/3;border-radius:14px;overflow:hidden;border:1px solid rgba(201,169,97,.25)">
+                  <x-import component-from-global-scope="image-slot" from="./image-slot.js" id="img-b-{{ p.id }}" shape="rect" placeholder="תמונת שער" src="./assets/covers/{{ p.cover }}" hint-size="230px,345px"></x-import>
+                  <div style="position:absolute;left:0;right:0;bottom:0;height:110px;background:linear-gradient(transparent,rgba(5,9,8,.9));pointer-events:none"></div>
+                  <div style="position:absolute;left:14px;right:14px;bottom:12px;color:#F4EAD0;font-weight:700;font-size:15.5px;pointer-events:none">{{ p.title }}</div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+
+          <!-- FOOTER -->
+          <div style="text-align:center;padding:50px 40px">
+            <div style="width:60px;height:1px;background:#C9A961;margin:0 auto 24px"></div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:28px;color:#F4EAD0;font-weight:600">P.prodactions</div>
+            <div style="font-size:12.5px;color:#7A8A7F;margin-top:6px">Dekel Feld · הפקות תוכן, דרמה ותעודה</div>
+          </div>
+
+          <!-- MODAL -->
+          <sc-if value="{{ modalBOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;inset:0;background:rgba(5,9,8,.86);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:40px;z-index:50">
+              <div style="position:relative;width:100%;max-width:600px;background:#213D2E;border:1px solid rgba(201,169,97,.32);border-radius:16px;padding:34px">
+                <div onClick="{{ modalB.close }}" style="position:absolute;top:16px;left:16px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;cursor:pointer;color:#ECE3CB;font-size:16px">×</div>
+                <div style="font-size:11px;font-weight:700;letter-spacing:.1em;color:#4FB7A8;text-transform:uppercase;margin-bottom:8px">{{ modalB.catLabel }}</div>
+                <h3 style="font-family:'Cormorant Garamond',serif;font-size:30px;color:#F4EAD0;margin:0 0 10px">{{ modalB.title }}</h3>
+                <p style="font-size:14.5px;color:#B8C5BB;line-height:1.75;margin:0 0 20px">{{ modalB.desc }}</p>
+                <sc-if value="{{ modalB.ytId }}" hint-placeholder-val="{{ false }}">
+                  <div style="position:relative;width:100%;padding-top:56.25%;border-radius:10px;overflow:hidden;margin-bottom:14px">
+                    <iframe src="https://www.youtube-nocookie.com/embed/{{ modalB.ytId }}" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen="true"></iframe>
+                  </div>
+                </sc-if>
+                <div style="display:flex;gap:10px">
+                  <input value="{{ modalB.draftValue }}" onChange="{{ modalB.onDraftChange }}" placeholder="הדביקו כאן קישור לסרטון יוטיוב" style="flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(201,169,97,.25);border-radius:8px;padding:10px 14px;color:#ECE3CB;font-size:13.5px;font-family:inherit"></input>
+                  <div onClick="{{ modalB.onSave }}" style="padding:10px 20px;border-radius:8px;background:#C9A961;color:#122418;font-weight:700;font-size:13.5px;cursor:pointer;white-space:nowrap">שמירה</div>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <p class="dv-next">נסו: "בואו נמשיך עם <a class="dv-oid" href="#1a">1a</a>" · "בואו נמשיך עם <a class="dv-oid" href="#1b">1b</a>" · "שילוב של שני הכיוונים"</p>
+</section>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const CATEGORIES = [
+  { id: 'ads', label: 'פרסומות', projects: [
+      { id: 'cibus', title: 'סיבוס', desc: 'סרט תדמית לחברת סיבוס - חברת ההטבות לעובדים. הפקה, בימוי ועריכה.', cover: 'cibus.jpg', ytId: 'av77vPLYpL0' },
+      { id: 'yated', title: 'יתד', desc: 'פרסומת לעיתון יתד נאמן.', cover: 'yated.jpg' },
+      { id: 'mayanei', title: 'מעיני הישועה', desc: 'מוקומנטרי על חדרי הניתוח בבית החולים מעיני הישועה והצוות הרפואי.' },
+      { id: 'hidabroot-camp', title: 'קמפיין הידברות', desc: 'קמפיין פרסום לערוץ הידברות 97.', cover: 'hidabroot-camp.png', ytId: 'pgooO_A_ekw' },
+  ]},
+  { id: 'tv', label: 'תכניות טלוויזיה', projects: [
+      { id: 'soul-food', title: 'סולפוד', desc: 'תכנית בישול ייחודית המשלבת תרבות, זהות יהודית וקולינריה - מנות מטבחי העולם בגרסה כשרה ומפוארת.', cover: 'soul-food.jpg', ytId: 'HyftBIw-qC4' },
+      { id: 'medabrim', title: 'מדברים', desc: 'תכנית שיחה אישית-אמונית. דתיים וחילונים.', cover: 'medabrim.jpg', ytId: 'ZZGrf20KPGc' },
+      { id: 'chatufot', title: 'חטופות - פסח 2025', desc: 'מיוחד פסח 2025 - תיעוד מסעם של החטופות וחזרתן.', cover: 'chatufot.jpg', ytId: '3NalQ6rcFxs' },
+      { id: 'shvarim', title: 'שברים של תקווה', desc: 'סדרה תיעודית-רגשית על אנשים שנשברו וקמו - סיפורי שיקום, אמונה ותקווה.', cover: 'shvarim.png', ytId: 'Q6T0muRxNeQ' },
+      { id: 'comfort-zone', title: 'לצאת מאזור הנוחות', desc: 'תכנית מוזיקלית אולפנית מול קהל בקונספט מיוחד של שיחה ושירה.', cover: 'comfort-zone.png', ytId: 'mEHrMdM3BYM' },
+      { id: 'never-alone', title: 'אף פעם לא לבד', desc: 'סדרת דוקו-ריאליטי המתחקה אחר נשות השכול אחרי ה-7 באוקטובר. פיתוח קונספט, יצירה והפקה.', cover: 'never-alone.jpg', ytId: 'VWOD_cQKQaI' },
+  ]},
+  { id: 'digital', label: 'דיגיטל', projects: [
+      { id: 'jonnys-workshop', title: 'הסדנה של ג׳וני', desc: 'סדרה דיגיטלית של הסדנה של ג׳וני. סדנת תקשורת דרך כללי המשחק.', cover: 'jonnys-workshop.jpg', ytId: '8jSlgzLqG14' },
+      { id: 'sippur-bishnayim', title: 'סיפור בשניים', desc: 'סדרת מערכונים קצרים, מצחיקים ומלמדים, על אתגרי הזוגיות וחיי המשפחה - בהגשת איתמר ואופיר צור.', cover: 'sippur-bishnayim.jpg', ytId: '3ZKxV_BW_sU' },
+  ]},
+  { id: 'doc', label: 'תעודה', projects: [
+      { id: 'desert-echoes', title: 'הדים מן המדבר', desc: 'סדרה תיעודית - סיפורם של הלומי הקרב, במסע יחודי למדבר לזכרו של גלעד ויטל ז"ל.', cover: 'desert-echoes.jpg' },
+      { id: 'abulafia', title: 'בית הכנסת אבולעפיה', desc: 'סרט תיעודי על בית הכנסת אבולעפיה - היסטוריה, מסורת והקהילה סביבו.', cover: 'abulafia.jpg' },
+  ]},
+];
+
+function extractYouTubeId(url) {
+  if (!url) return null;
+  const patterns = [
+    /youtube\.com\/watch\?(?:.*&)?v=([A-Za-z0-9_-]+)/,
+    /youtu\.be\/([A-Za-z0-9_-]+)/,
+    /youtube\.com\/embed\/([A-Za-z0-9_-]+)/,
+    /youtube\.com\/shorts\/([A-Za-z0-9_-]+)/,
+  ];
+  for (const p of patterns) {
+    const m = url.match(p);
+    if (m) return m[1];
+  }
+  return null;
+}
+
+class Component extends DCLogic {
+  state = { modalA: null, modalB: null, activeCatB: 'ads', ytLinks: {}, ytDraft: {} };
+
+  componentDidMount() {
+    try {
+      const raw = localStorage.getItem('pprod-dc-yt-links');
+      if (raw) this.setState({ ytLinks: JSON.parse(raw) });
+    } catch (e) {}
+  }
+
+  openModal(opt, pid) {
+    this.setState(opt === 'a' ? { modalA: pid } : { modalB: pid });
+  }
+  closeModal(opt) {
+    this.setState(opt === 'a' ? { modalA: null } : { modalB: null });
+  }
+  setActiveCatB(catId) {
+    this.setState({ activeCatB: catId });
+  }
+  setYtDraft(pid, value) {
+    this.setState(s => ({ ytDraft: { ...s.ytDraft, [pid]: value } }));
+  }
+  saveYtLink(pid) {
+    const val = (this.state.ytDraft[pid] || '').trim();
+    const id = extractYouTubeId(val);
+    if (val && !id) { alert('קישור יוטיוב לא תקין'); return; }
+    this.setState(s => {
+      const next = { ...s.ytLinks };
+      if (val) next[pid] = val; else delete next[pid];
+      try { localStorage.setItem('pprod-dc-yt-links', JSON.stringify(next)); } catch (e) {}
+      return { ytLinks: next };
+    });
+  }
+
+  buildCats(opt) {
+    return CATEGORIES.map(cat => ({
+      id: cat.id,
+      label: cat.label,
+      count: cat.projects.length,
+      active: cat.id === this.state.activeCatB,
+      tabBg: cat.id === this.state.activeCatB ? '#C9A961' : 'transparent',
+      tabColor: cat.id === this.state.activeCatB ? '#122418' : '#ECE3CB',
+      tabWeight: cat.id === this.state.activeCatB ? '700' : '500',
+      selectCat: () => this.setActiveCatB(cat.id),
+      projects: cat.projects.map(p => ({
+        ...p,
+        catLabel: cat.label,
+        open: () => this.openModal(opt, p.id),
+      })),
+    }));
+  }
+
+  buildModal(opt) {
+    const pid = opt === 'a' ? this.state.modalA : this.state.modalB;
+    if (!pid) return null;
+    let found = null, catLabel = '';
+    for (const cat of CATEGORIES) {
+      const p = cat.projects.find(x => x.id === pid);
+      if (p) { found = p; catLabel = cat.label; break; }
+    }
+    if (!found) return null;
+    const defaultUrl = found.ytId ? `https://youtu.be/${found.ytId}` : '';
+    const savedUrl = this.state.ytLinks[pid] || defaultUrl;
+    const draft = this.state.ytDraft[pid] !== undefined ? this.state.ytDraft[pid] : savedUrl;
+    return {
+      id: found.id,
+      title: found.title,
+      desc: found.desc,
+      catLabel,
+      ytId: extractYouTubeId(savedUrl),
+      draftValue: draft,
+      onDraftChange: (e) => this.setYtDraft(pid, e.target.value),
+      onSave: () => this.saveYtLink(pid),
+      close: () => this.closeModal(opt),
+    };
+  }
+
+  renderVals() {
+    const catsB = this.buildCats('b');
+    const activeCat = catsB.find(c => c.id === this.state.activeCatB) || catsB[0];
+    const modalA = this.buildModal('a');
+    const modalB = this.buildModal('b');
+    return {
+      catsA: this.buildCats('a'),
+      catsB,
+      activeCatProjects: activeCat.projects,
+      modalA,
+      modalAOpen: !!modalA,
+      modalB,
+      modalBOpen: !!modalB,
+    };
+  }
+}
+
+</script>
+</body>
+</html>
