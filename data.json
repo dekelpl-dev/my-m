@@ -1,0 +1,40 @@
+[
+  {
+    "id": "ads",
+    "label": "פרסומות",
+    "projects": [
+      { "id": "cibus", "title": "סיבוס", "desc": "סרט תדמית לחברת סיבוס - חברת ההטבות לעובדים. הפקה, בימוי ועריכה.", "cover": "cibus.jpg", "ytId": "av77vPLYpL0" },
+      { "id": "yated", "title": "יתד", "desc": "פרסומת לעיתון יתד נאמן.", "cover": "yated.jpg" },
+      { "id": "mayanei", "title": "מעיני הישועה", "desc": "מוקומנטרי על חדרי הניתוח בבית החולים מעיני הישועה והצוות הרפואי." },
+      { "id": "hidabroot-camp", "title": "קמפיין הידברות", "desc": "קמפיין פרסום לערוץ הידברות 97.", "cover": "hidabroot-camp.png", "ytId": "pgooO_A_ekw" }
+    ]
+  },
+  {
+    "id": "tv",
+    "label": "תכניות טלוויזיה",
+    "projects": [
+      { "id": "soul-food", "title": "סולפוד", "desc": "תכנית בישול ייחודית המשלבת תרבות, זהות יהודית וקולינריה - מנות מטבחי העולם בגרסה כשרה ומפוארת.", "cover": "soul-food.jpg", "ytId": "HyftBIw-qC4" },
+      { "id": "medabrim", "title": "מדברים", "desc": "תכנית שיחה אישית-אמונית. דתיים וחילונים.", "cover": "medabrim.jpg", "ytId": "ZZGrf20KPGc" },
+      { "id": "chatufot", "title": "חטופות - פסח 2025", "desc": "מיוחד פסח 2025 - תיעוד מסעם של החטופות וחזרתן.", "cover": "chatufot.jpg", "ytId": "3NalQ6rcFxs" },
+      { "id": "shvarim", "title": "שברים של תקווה", "desc": "סדרה תיעודית-רגשית על אנשים שנשברו וקמו - סיפורי שיקום, אמונה ותקווה.", "cover": "shvarim.png", "ytId": "Q6T0muRxNeQ" },
+      { "id": "comfort-zone", "title": "לצאת מאזור הנוחות", "desc": "תכנית מוזיקלית אולפנית מול קהל בקונספט מיוחד של שיחה ושירה.", "cover": "comfort-zone.png", "ytId": "mEHrMdM3BYM" },
+      { "id": "never-alone", "title": "אף פעם לא לבד", "desc": "סדרת דוקו-ריאליטי המתחקה אחר נשות השכול אחרי ה-7 באוקטובר. פיתוח קונספט, יצירה והפקה.", "cover": "never-alone.jpg", "ytId": "VWOD_cQKQaI" }
+    ]
+  },
+  {
+    "id": "digital",
+    "label": "דיגיטל",
+    "projects": [
+      { "id": "jonnys-workshop", "title": "הסדנה של ג׳וני", "desc": "סדרה דיגיטלית של הסדנה של ג׳וני. סדנת תקשורת דרך כללי המשחק.", "cover": "jonnys-workshop.jpg", "ytId": "8jSlgzLqG14" },
+      { "id": "sippur-bishnayim", "title": "סיפור בשניים", "desc": "סדרת מערכונים קצרים, מצחיקים ומלמדים, על אתגרי הזוגיות וחיי המשפחה - בהגשת איתמר ואופיר צור.", "cover": "sippur-bishnayim.jpg", "ytId": "3ZKxV_BW_sU" }
+    ]
+  },
+  {
+    "id": "doc",
+    "label": "תעודה",
+    "projects": [
+      { "id": "desert-echoes", "title": "הדים מן המדבר", "desc": "סדרה תיעודית - סיפורם של הלומי הקרב, במסע יחודי למדבר לזכרו של גלעד ויטל ז\"ל.", "cover": "desert-echoes.jpg" },
+      { "id": "abulafia", "title": "בית הכנסת אבולעפיה", "desc": "סרט תיעודי על בית הכנסת אבולעפיה - היסטוריה, מסורת והקהילה סביבו.", "cover": "abulafia.jpg" }
+    ]
+  }
+]
