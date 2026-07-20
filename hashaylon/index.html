@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>השאילון — שואלים. משתמשים. מחזירים.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --green:#2E7D32; --purple:#5E35B1; --pink:#EC4899; --orange:#F97316;
+    --ink:#1A1C1E; --muted:#5A6068; --line:#EAECEF;
+    --bg:#FFFFFF; --gray:#F8F9FA; --radius:20px;
+    --sh-sm:0 2px 8px rgba(20,24,31,.05);
+    --sh:0 8px 28px rgba(20,24,31,.08);
+    --sh-lg:0 20px 55px rgba(20,24,31,.12);
+    --s:8px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{background:#EDEFF2}
+  body{
+    font-family:'Open Sans',sans-serif;color:var(--ink);
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+    display:flex;justify-content:center;
+  }
+  .page{
+    width:1440px;min-height:1024px;background:var(--bg);
+    position:relative;overflow:hidden;
+    padding:0 64px;
+  }
+
+  /* ============ NAV ============ */
+  nav{
+    height:72px;display:flex;align-items:center;justify-content:space-between;
+    border-bottom:1px solid var(--line);
+  }
+  .nav-links{display:flex;gap:34px;align-items:center}
+  .nav-links a{color:var(--muted);text-decoration:none;font-size:15px;font-weight:600;transition:color .2s}
+  .nav-links a:hover{color:var(--ink)}
+  .nav-cta{display:flex;gap:12px;align-items:center}
+  .btn{
+    font-family:inherit;font-weight:700;border:none;cursor:pointer;
+    border-radius:100px;font-size:15px;transition:transform .15s,box-shadow .2s,background .2s;
+    display:inline-flex;align-items:center;gap:8px;white-space:nowrap;
+  }
+  .btn:hover{transform:translateY(-2px)}
+  .btn-green{background:var(--green);color:#fff;padding:13px 26px;box-shadow:0 6px 18px rgba(46,125,50,.28)}
+  .btn-green:hover{box-shadow:0 10px 24px rgba(46,125,50,.36)}
+  .btn-ghost{background:#fff;color:var(--ink);padding:12px 24px;border:1.5px solid var(--line);box-shadow:var(--sh-sm)}
+  .btn-ghost:hover{border-color:#d5d9de}
+  .btn-sm{padding:10px 20px;font-size:14px}
+
+  /* ============ LOGO ============ */
+  .logo{display:flex;flex-direction:column;align-items:center;gap:3px;line-height:1}
+  .logo .mark{display:flex;flex-direction:column;align-items:center}
+  .logo-row{display:flex;align-items:flex-end;gap:9px}
+  .logo-word{font-weight:800;font-size:26px;let-spacing:-.5px;color:var(--ink);position:relative}
+  .logo-word .dot{color:var(--orange)}
+  .logo-sub{font-size:9.5px;font-weight:700;color:var(--ink);display:flex;gap:7px;align-items:center;letter-spacing:.3px}
+  .logo-sub i{width:5px;height:5px;border-radius:2px;display:inline-block}
+  .hourglass{width:34px;height:26px}
+
+  /* ============ HERO ============ */
+  .hero{display:grid;grid-template-columns:540px 1fr;gap:36px;align-items:center;padding:10px 0 2px}
+  .hero-copy{padding-top:2px}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;background:#F3EEFB;color:var(--purple);
+    font-weight:700;font-size:13px;padding:6px 14px;border-radius:100px;margin-bottom:10px;
+  }
+  .eyebrow .d{width:7px;height:7px;border-radius:50%;background:var(--purple)}
+  h1{font-size:44px;font-weight:800;line-height:1.06;letter-spacing:-1.5px;margin-bottom:12px}
+  h1 .g{color:var(--green)} h1 .p{color:var(--purple)} h1 .k{color:var(--pink)}
+  .sub{font-size:16.5px;color:var(--muted);line-height:1.5;font-weight:500;max-width:440px;margin-bottom:16px}
+  .hero-btns{display:flex;gap:14px;align-items:center}
+  .btn-lg{padding:14px 30px;font-size:16px}
+  .hero-stats{display:flex;gap:30px;margin-top:12px}
+  .stat b{font-size:23px;font-weight:800;display:block;letter-spacing:-.5px}
+  .stat span{font-size:13px;color:var(--muted);font-weight:600}
+  .stat.g b{color:var(--green)} .stat.p b{color:var(--purple)} .stat.o b{color:var(--orange)}
+
+  /* hero composition */
+  .hero-art{position:relative;height:318px}
+  .blob{position:absolute;border-radius:50%;filter:blur(46px);opacity:.5;z-index:0}
+  .blob.b1{width:280px;height:280px;background:var(--pink);top:-20px;right:20px}
+  .blob.b2{width:260px;height:260px;background:var(--purple);bottom:0;left:0}
+  .blob.b3{width:220px;height:220px;background:var(--orange);top:120px;left:120px;opacity:.4}
+  .float{
+    position:absolute;border-radius:24px;box-shadow:var(--sh-lg);overflow:hidden;z-index:2;
+    border:5px solid #fff;
+  }
+  .float .cap{position:absolute;bottom:8px;right:8px;background:#fff;border-radius:100px;
+    font-size:11px;font-weight:700;padding:4px 11px;box-shadow:var(--sh-sm);display:flex;align-items:center;gap:6px}
+  .float .cap .av{width:7px;height:7px;border-radius:50%;background:var(--green)}
+  .f1{width:206px;height:158px;top:6px;right:40px;transform:rotate(-3deg)}
+  .f2{width:168px;height:132px;top:0px;left:24px;transform:rotate(4deg);z-index:3}
+  .f3{width:176px;height:180px;bottom:6px;right:96px;transform:rotate(3deg);z-index:3}
+  .f4{width:164px;height:132px;bottom:16px;left:6px;transform:rotate(-4deg)}
+  .chip-badge{
+    position:absolute;z-index:5;background:#fff;border-radius:16px;box-shadow:var(--sh);
+    padding:9px 13px;display:flex;align-items:center;gap:10px;font-weight:700;font-size:12.5px;
+  }
+  .chip-badge .ic{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center}
+  .cb1{top:132px;right:-6px} .cb2{bottom:64px;left:70px}
+
+  /* ============ SECTIONS ============ */
+  .sec{padding:0}
+  .sec-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:7px}
+  .sec-title{font-size:21px;font-weight:800;letter-spacing:-.5px}
+  .sec-title small{display:block;font-size:13px;font-weight:600;color:var(--muted);margin-top:2px;letter-spacing:0}
+  .see-all{color:var(--green);font-weight:700;font-size:14px;text-decoration:none;display:flex;align-items:center;gap:5px}
+
+  /* categories */
+  .cats{display:grid;grid-template-columns:repeat(6,1fr);gap:16px}
+  .cat{
+    background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:12px 12px;
+    text-align:center;box-shadow:var(--sh-sm);transition:transform .18s,box-shadow .2s,border-color .2s;cursor:pointer;
+  }
+  .cat:hover{transform:translateY(-4px);box-shadow:var(--sh);border-color:transparent}
+  .cat .ic{width:46px;height:46px;border-radius:14px;margin:0 auto 7px;display:flex;align-items:center;justify-content:center}
+  .cat b{font-size:15px;font-weight:700;display:block}
+  .cat span{font-size:12px;color:var(--muted);font-weight:600}
+
+  /* featured + right column */
+  .grid-2{display:grid;grid-template-columns:1fr 348px;gap:24px;align-items:stretch}
+  .prods{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .prod{
+    background:#fff;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;
+    box-shadow:var(--sh-sm);transition:transform .18s,box-shadow .2s;
+  }
+  .prod:hover{transform:translateY(-4px);box-shadow:var(--sh)}
+  .prod .ph{height:86px;position:relative;display:flex;align-items:center;justify-content:center}
+  .badge{position:absolute;top:10px;right:10px;background:rgba(255,255,255,.92);backdrop-filter:blur(4px);
+    border-radius:100px;font-size:11px;font-weight:700;padding:4px 10px;display:flex;align-items:center;gap:5px;color:var(--green)}
+  .badge .av{width:6px;height:6px;border-radius:50%;background:var(--green)}
+  .badge.soon{color:var(--orange)} .badge.soon .av{background:var(--orange)}
+  .prod .body{padding:9px 14px 11px}
+  .prod .cat-tag{font-size:11px;font-weight:700;color:var(--purple);margin-bottom:2px}
+  .prod .nm{font-size:15px;font-weight:700;margin-bottom:2px}
+  .prod .meta{font-size:12px;color:var(--muted);font-weight:600;margin-bottom:9px}
+  .prod .borrow{
+    width:100%;justify-content:center;background:var(--gray);color:var(--ink);
+    padding:9px;border-radius:12px;border:1px solid var(--line);font-weight:700;font-size:13px;
+  }
+  .prod:hover .borrow{background:var(--green);color:#fff;border-color:var(--green)}
+
+  /* how it works card */
+  .how{background:linear-gradient(160deg,#F6F3FC 0%,#FDF1F7 100%);border-radius:var(--radius);
+    padding:14px 16px;border:1px solid var(--line);box-shadow:var(--sh-sm)}
+  .how h3{font-size:17px;font-weight:800;margin-bottom:9px}
+  .steps{display:flex;flex-direction:column;gap:8px}
+  .step{display:flex;align-items:center;gap:13px;background:#fff;border-radius:14px;padding:9px 12px;box-shadow:var(--sh-sm)}
+  .step .n{width:30px;height:30px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+    color:#fff;font-weight:800;font-size:14px;flex-shrink:0}
+  .step .ic{width:34px;height:34px;flex-shrink:0}
+  .step b{font-size:14.5px;font-weight:700;display:block}
+  .step span{font-size:12px;color:var(--muted);font-weight:600}
+
+  /* benefits */
+  .bens{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .ben{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:9px 13px;
+    box-shadow:var(--sh-sm);display:flex;align-items:center;gap:11px;transition:transform .18s,box-shadow .2s}
+  .ben:hover{transform:translateY(-3px);box-shadow:var(--sh)}
+  .ben .ic{width:46px;height:46px;flex-shrink:0}
+  .ben b{font-size:15px;font-weight:700;display:block}
+  .ben span{font-size:12px;color:var(--muted);font-weight:600;line-height:1.3}
+
+  /* footer */
+  footer{margin-top:4px;border-top:1px solid var(--line);padding:9px 0 8px;
+    display:flex;align-items:center;justify-content:space-between}
+  .foot-links{display:flex;gap:26px}
+  .foot-links a{color:var(--muted);text-decoration:none;font-size:14px;font-weight:600}
+  .foot-links a:hover{color:var(--ink)}
+  .socials{display:flex;gap:10px}
+  .socials a{width:38px;height:38px;border-radius:12px;background:var(--gray);border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;transition:background .2s}
+  .socials a:hover{background:#fff;box-shadow:var(--sh-sm)}
+  .copy{font-size:12px;color:var(--muted);font-weight:600}
+
+  /* ---- product illustration backgrounds ---- */
+  .bg-drill{background:radial-gradient(circle at 50% 40%,#4FB477 0%,#2E9E63 55%,#25874F 100%)}
+  .bg-tent{background:radial-gradient(circle at 50% 40%,#8E6BD6 0%,#6E45C4 55%,#5E35B1 100%)}
+  .bg-stroller{background:radial-gradient(circle at 50% 40%,#F7A8CE 0%,#F179B4 55%,#EC4899 100%)}
+  .bg-game{background:radial-gradient(circle at 50% 40%,#FBA85A 0%,#F98B2E 55%,#F97316 100%)}
+  .float svg,.ph svg.pi{position:absolute;inset:0;width:100%;height:100%}
+  .float svg.pi{padding:14px}
+  .ph svg.pi{padding:8px}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ===================== NAV ===================== -->
+  <nav>
+    <!-- logo -->
+    <div class="logo">
+      <div class="mark">
+        <svg class="hourglass" viewBox="0 0 34 26" fill="none">
+          <rect x="0" y="0" width="13" height="10" rx="2" fill="#F97316"/>
+          <rect x="14" y="0" width="3.2" height="10" fill="#5E35B1"/>
+          <rect x="18" y="0" width="3.2" height="10" fill="#5E35B1"/>
+          <path d="M22 0 h9 a2 2 0 0 1 2 2 v6 a2 2 0 0 1 -2 2 h-9 z" fill="#EC4899"/>
+          <path d="M8 4 l-6 -3.4 v6.8 z" fill="#F97316"/>
+        </svg>
+      </div>
+      <div class="logo-row">
+        <div class="logo-word">השאילו<span class="dot">ן</span></div>
+      </div>
+      <div class="logo-sub">
+        <span>שואלים</span><i style="background:var(--pink)"></i>
+        <span>משתמשים</span><i style="background:var(--orange)"></i>
+        <span>מחזירים</span>
+      </div>
+    </div>
+
+    <div class="nav-links">
+      <a href="#">קטגוריות</a>
+      <a href="#">איך זה עובד</a>
+      <a href="#">ציוד פופולרי</a>
+      <a href="#">אודות</a>
+      <a href="#">שאלות נפוצות</a>
+    </div>
+    <div class="nav-cta">
+      <button class="btn btn-ghost btn-sm">כניסה</button>
+      <button class="btn btn-green btn-sm">הרשמה חינם</button>
+    </div>
+  </nav>
+
+  <!-- ===================== HERO ===================== -->
+  <section class="hero">
+    <div class="hero-copy">
+      <span class="eyebrow"><span class="d"></span> קהילה שיתופית של השאלת ציוד</span>
+      <h1><span class="g">שואלים.</span> <span class="p">משתמשים.</span><br><span class="k">מחזירים.</span></h1>
+      <p class="sub">הדרך החכמה ליהנות מציוד איכותי בלי לקנות. שכנים משאילים לשכנים — פשוט, מהיר וידידותי לסביבה.</p>
+      <div class="hero-btns">
+        <button class="btn btn-green btn-lg">התחילו להשאיל
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M14 5l7 7-7 7M21 12H3" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="btn btn-ghost btn-lg">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#5E35B1" stroke-width="2"/><path d="M10 8.5l5 3.5-5 3.5z" fill="#5E35B1"/></svg>
+          איך זה עובד
+        </button>
+      </div>
+      <div class="hero-stats">
+        <div class="stat g"><b>12,400+</b><span>פריטים זמינים</span></div>
+        <div class="stat p"><b>38,000</b><span>חברי קהילה</span></div>
+        <div class="stat o"><b>₪4.2M</b><span>נחסכו השנה</span></div>
+      </div>
+    </div>
+
+    <!-- floating product composition -->
+    <div class="hero-art">
+      <div class="blob b1"></div>
+      <div class="blob b2"></div>
+      <div class="blob b3"></div>
+
+      <!-- drill (green) -->
+      <div class="float f1 bg-drill"><svg class="pi" viewBox="0 0 240 180" fill="none" preserveAspectRatio="xMidYMid meet">
+  <ellipse cx="120" cy="158" rx="72" ry="9" fill="#000" opacity=".12"/>
+  <!-- battery -->
+  <rect x="112" y="118" width="52" height="34" rx="7" fill="#2B2F33"/>
+  <rect x="120" y="126" width="14" height="8" rx="2" fill="#4A5056"/>
+  <!-- handle -->
+  <path d="M104 70 q-6 26 6 52 h30 q10-24 6-52 z" fill="#33383D"/>
+  <path d="M110 78 q-3 22 5 40" stroke="#565C62" stroke-width="3" stroke-linecap="round"/>
+  <!-- body -->
+  <rect x="96" y="52" width="96" height="46" rx="20" fill="#E8ECEF"/>
+  <rect x="96" y="52" width="70" height="46" rx="20" fill="#37B26E"/>
+  <rect x="150" y="58" width="30" height="34" rx="8" fill="#2E9E63"/>
+  <!-- chuck -->
+  <rect x="70" y="60" width="34" height="30" rx="6" fill="#20242A"/>
+  <rect x="60" y="66" width="16" height="18" rx="3" fill="#8A9096"/>
+  <rect x="50" y="71" width="14" height="8" rx="2" fill="#C7CDD2"/>
+  <circle cx="120" cy="72" r="6" fill="#25322C" opacity=".5"/>
+  <!-- trigger -->
+  <path d="M108 98 q-6 6 -4 14 l10-2 z" fill="#20242A"/>
+</svg><div class="cap"><span class="av"></span>מברגה</div></div>
+      <!-- board game (orange) -->
+      <div class="float f2 bg-game"><svg class="pi" viewBox="0 0 240 180" fill="none" preserveAspectRatio="xMidYMid meet">
+  <ellipse cx="122" cy="156" rx="96" ry="12" fill="#000" opacity=".12"/>
+  <!-- board -->
+  <g transform="translate(52 70)">
+    <path d="M0 40 L86 8 L156 40 L70 78 Z" fill="#EAF0F5"/>
+    <path d="M0 40 L86 8 L156 40 L70 78 Z" fill="none" stroke="#2E7D32" stroke-width="0" />
+    <path d="M8 40 L86 15 L148 40 L70 70 Z" fill="#fff"/>
+    <path d="M20 40 L86 22 L136 40 L70 62 Z" fill="#EC4899" opacity=".22"/>
+    <path d="M40 40 L86 30 L118 40 L70 52 Z" fill="#5E35B1" opacity=".28"/>
+    <!-- pawns -->
+    <path d="M60 34 q6 0 6 6 q4 3 0 6 l-12 0 q-4-3 0-6 q0-6 6-6z" fill="#EC4899"/>
+    <path d="M96 30 q6 0 6 6 q4 3 0 6 l-12 0 q-4-3 0-6 q0-6 6-6z" fill="#5E35B1"/>
+    <path d="M82 48 q6 0 6 6 q4 3 0 6 l-12 0 q-4-3 0-6 q0-6 6-6z" fill="#2E7D32"/>
+    <path d="M118 40 q6 0 6 6 q4 3 0 6 l-12 0 q-4-3 0-6 q0-6 6-6z" fill="#F97316"/>
+  </g>
+  <!-- box -->
+  <g transform="translate(30 42)">
+    <path d="M0 22 L44 4 L86 20 L42 40 Z" fill="#7A4FD0"/>
+    <path d="M0 22 L42 40 L42 58 L0 40 Z" fill="#5E35B1"/>
+    <path d="M86 20 L42 40 L42 58 L86 38 Z" fill="#4C2A9E"/>
+    <circle cx="40" cy="22" r="8" fill="#FBE7F1"/><circle cx="40" cy="22" r="4" fill="#F97316"/>
+    <circle cx="22" cy="18" r="3" fill="#25B079"/><circle cx="60" cy="26" r="3" fill="#EC4899"/>
+  </g>
+  <!-- dice -->
+  <g transform="translate(150 96) rotate(12)">
+    <rect x="0" y="0" width="20" height="20" rx="5" fill="#fff" stroke="#E2E6EA"/>
+    <circle cx="6" cy="6" r="2" fill="#20242A"/><circle cx="14" cy="14" r="2" fill="#20242A"/><circle cx="10" cy="10" r="2" fill="#20242A"/>
+  </g>
+</svg><div class="cap"><span class="av"></span>משחק קופסה</div></div>
+      <!-- stroller (pink) -->
+      <div class="float f3 bg-stroller"><svg class="pi" viewBox="0 0 240 180" fill="none" preserveAspectRatio="xMidYMid meet">
+  <ellipse cx="120" cy="160" rx="86" ry="9" fill="#000" opacity=".12"/>
+  <!-- wheels -->
+  <circle cx="72" cy="146" r="18" fill="#1B1E22"/><circle cx="72" cy="146" r="7" fill="#3A4046"/>
+  <circle cx="176" cy="146" r="14" fill="#1B1E22"/><circle cx="176" cy="146" r="5.5" fill="#3A4046"/>
+  <!-- frame -->
+  <path d="M70 146 L120 96 L150 66 M120 96 L176 146 M92 120 L168 120" stroke="#2B2F33" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- basket -->
+  <path d="M96 132 q28 10 60 0 l-6 12 q-24 6 -48 0 z" fill="#26292E"/>
+  <!-- seat + canopy -->
+  <path d="M96 118 L104 74 Q150 64 158 96 L150 120 Z" fill="#2B2F33"/>
+  <path d="M104 74 Q150 62 160 100 Q150 84 120 86 Q106 86 104 74 Z" fill="#3A4046"/>
+  <path d="M112 96 h34 v20 h-34 z" fill="#40464C"/>
+  <!-- handle -->
+  <path d="M150 66 q14 -2 16 8" stroke="#40464C" stroke-width="7" stroke-linecap="round" fill="none"/>
+</svg><div class="cap"><span class="av"></span>עגלה</div></div>
+      <!-- tent (purple) -->
+      <div class="float f4 bg-tent"><svg class="pi" viewBox="0 0 240 180" fill="none" preserveAspectRatio="xMidYMid meet">
+  <ellipse cx="120" cy="152" rx="92" ry="10" fill="#000" opacity=".12"/>
+  <!-- guy lines -->
+  <path d="M60 130 L34 150 M180 130 L206 150" stroke="#E8A24A" stroke-width="2.4" stroke-linecap="round"/>
+  <!-- dome -->
+  <path d="M40 138 Q42 66 120 58 Q198 66 200 138 Z" fill="#1F9E6B"/>
+  <path d="M40 138 Q42 66 120 58 Q160 60 176 96 Q150 140 40 138 Z" fill="#25B079"/>
+  <!-- door -->
+  <path d="M120 60 Q92 66 84 138 L120 138 Z" fill="#0E5C3E"/>
+  <path d="M120 60 Q112 100 120 138" stroke="#25B079" stroke-width="3"/>
+  <path d="M120 60 Q100 64 92 100" stroke="#1F9E6B" stroke-width="3" fill="none"/>
+  <!-- floor -->
+  <path d="M40 138 Q120 150 200 138 L196 146 Q120 158 44 146 Z" fill="#20262B"/>
+  <!-- poles -->
+  <path d="M52 140 Q60 84 120 60 M188 140 Q180 84 120 60" stroke="#E8A24A" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+</svg><div class="cap"><span class="av"></span>אוהל</div></div>
+
+      <div class="chip-badge cb1">
+        <div class="ic" style="background:#E7F3E8">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#2E7D32" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        זמין עכשיו
+      </div>
+      <div class="chip-badge cb2">
+        <div class="ic" style="background:#FDECEF">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.5-9.5-9C1 9 2.5 5.5 6 5.5c2 0 3 1.2 4 2.5 1-1.3 2-2.5 4-2.5 3.5 0 5 3.5 3.5 6.5C19 16.5 12 21 12 21z" fill="#EC4899"/></svg>
+        </div>
+        אהובים בקהילה
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CATEGORIES ===================== -->
+  <section class="sec">
+    <div class="sec-head">
+      <div class="sec-title">קטגוריות פופולריות
+        <small>בחרו תחום ומצאו בדיוק את מה שאתם צריכים</small>
+      </div>
+      <a class="see-all" href="#">לכל הקטגוריות
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M14 6l-6 6 6 6" stroke="#2E7D32" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+    <div class="cats">
+      <!-- כלי עבודה -->
+      <div class="cat">
+        <div class="ic" style="background:#E7F3E8">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M14.7 6.3a3.5 3.5 0 00-4.6 4.6L3 18l3 3 7.1-7.1a3.5 3.5 0 004.6-4.6l-2.1 2.1-2.1-.5-.5-2.1 2.2-2.5z" fill="#2E7D32"/><circle cx="7" cy="17" r="1.1" fill="#fff"/></svg>
+        </div>
+        <b>כלי עבודה</b><span>1,820 פריטים</span>
+      </div>
+      <!-- ציוד לתינוקות -->
+      <div class="cat">
+        <div class="ic" style="background:#FDECEF">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M4 4h2a6 6 0 016 6H4V4z" fill="#EC4899"/><path d="M12 10a6 6 0 01-6 6h12l-2-6h-4z" fill="#EC4899" opacity=".6"/><circle cx="7" cy="19" r="2" fill="#EC4899"/><circle cx="16" cy="19" r="2" fill="#EC4899"/></svg>
+        </div>
+        <b>ציוד לתינוקות</b><span>960 פריטים</span>
+      </div>
+      <!-- משחקים -->
+      <div class="cat">
+        <div class="ic" style="background:#F3EEFB">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="4" fill="#5E35B1"/><circle cx="8" cy="8" r="1.6" fill="#fff"/><circle cx="16" cy="8" r="1.6" fill="#fff"/><circle cx="12" cy="12" r="1.6" fill="#fff"/><circle cx="8" cy="16" r="1.6" fill="#fff"/><circle cx="16" cy="16" r="1.6" fill="#fff"/></svg>
+        </div>
+        <b>משחקים</b><span>1,340 פריטים</span>
+      </div>
+      <!-- קמפינג -->
+      <div class="cat">
+        <div class="ic" style="background:#FEEEDF">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M12 3L2 20h20L12 3z" fill="#F97316"/><path d="M12 9l-5 11h10L12 9z" fill="#fff" opacity=".35"/><path d="M12 12v8" stroke="#fff" stroke-width="1.6"/></svg>
+        </div>
+        <b>קמפינג</b><span>720 פריטים</span>
+      </div>
+      <!-- אירועים -->
+      <div class="cat">
+        <div class="ic" style="background:#F3EEFB">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M3 21l6-14 8 8-14 6z" fill="#5E35B1"/><circle cx="17" cy="6" r="2.4" fill="#EC4899"/><path d="M14 3l1 2M20 4l-2 1M21 9l-2-1" stroke="#F97316" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </div>
+        <b>אירועים</b><span>540 פריטים</span>
+      </div>
+      <!-- פנאי -->
+      <div class="cat">
+        <div class="ic" style="background:#E7F3E8">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><circle cx="6" cy="17" r="3.2" stroke="#2E7D32" stroke-width="2"/><circle cx="18" cy="17" r="3.2" stroke="#2E7D32" stroke-width="2"/><path d="M6 17l4-7h5l3 7M10 10l4 0" stroke="#2E7D32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="14" cy="6" r="1.6" fill="#F97316"/></svg>
+        </div>
+        <b>פנאי</b><span>1,110 פריטים</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FEATURED + HOW IT WORKS ===================== -->
+  <section class="sec">
+    <div class="grid-2">
+      <div>
+        <div class="sec-head">
+          <div class="sec-title">ציוד מומלץ להשאלה
+            <small>הפריטים המבוקשים ביותר בקהילה שלכם השבוע</small>
+          </div>
+          <a class="see-all" href="#">עוד ציוד
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M14 6l-6 6 6 6" stroke="#2E7D32" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+        <div class="prods">
+          <!-- drill -->
+          <div class="prod">
+            <div class="ph bg-drill"><svg class="pi" viewBox="0 0 240 180" fill="none" preserveAspectRatio="xMidYMid meet">
+  <ellipse cx="120" cy="158" rx="72" ry="9" fill="#000" opacity=".12"/>
+  <!-- battery -->
+  <rect x="112" y="118" width="52" height="34" rx="7" fill="#2B2F33"/>
+  <rect x="120" y="126" width="14" height="8" rx="2" fill="#4A5056"/>
+  <!-- handle -->
+  <path d="M104 70 q-6 26 6 52 h30 q10-24 6-52 z" fill="#33383D"/>
+  <path d="M110 78 q-3 22 5 40" stroke="#565C62" stroke-width="3" stroke-linecap="round"/>
+  <!-- body -->
+  <rect x="96" y="52" width="96" height="46" rx="20" fill="#E8ECEF"/>
+  <rect x="96" y="52" width="70" height="46" rx="20" fill="#37B26E"/>
+  <rect x="150" y="58" width="30" height="34" rx="8" fill="#2E9E63"/>
+  <!-- chuck -->
+  <rect x="70" y="60" width="34" height="30" rx="6" fill="#20242A"/>
+  <rect x="60" y="66" width="16" height="18" rx="3" fill="#8A9096"/>
+  <rect x="50" y="71" width="14" height="8" rx="2" fill="#C7CDD2"/>
+  <circle cx="120" cy="72" r="6" fill="#25322C" opacity=".5"/>
+  <!-- trigger -->
+  <path d="M108 98 q-6 6 -4 14 l10-2 z" fill="#20242A"/>
+</svg><span class="badge"><span class="av"></span>זמין</span></div>
+            <div class="body">
+              <div class="cat-tag">כלי עבודה</div>
+              <div class="nm">מברגה נטענת 18V</div>
+              <div class="meta">2.4 ק"מ · ★ 4.9 (86)</div>
+              <button class="btn borrow">להשאלה</button>
+            </div>
+          </div>
+          <!-- tent -->
+          <div class="prod">
+            <div class="ph bg-tent"><svg class="pi" viewBox="0 0 240 180" fill="none" preserveAspectRatio="xMidYMid meet">
+  <ellipse cx="120" cy="152" rx="92" ry="10" fill="#000" opacity=".12"/>
+  <!-- guy lines -->
+  <path d="M60 130 L34 150 M180 130 L206 150" stroke="#E8A24A" stroke-width="2.4" stroke-linecap="round"/>
+  <!-- dome -->
+  <path d="M40 138 Q42 66 120 58 Q198 66 200 138 Z" fill="#1F9E6B"/>
+  <path d="M40 138 Q42 66 120 58 Q160 60 176 96 Q150 140 40 138 Z" fill="#25B079"/>
+  <!-- door -->
+  <path d="M120 60 Q92 66 84 138 L120 138 Z" fill="#0E5C3E"/>
+  <path d="M120 60 Q112 100 120 138" stroke="#25B079" stroke-width="3"/>
+  <path d="M120 60 Q100 64 92 100" stroke="#1F9E6B" stroke-width="3" fill="none"/>
+  <!-- floor -->
+  <path d="M40 138 Q120 150 200 138 L196 146 Q120 158 44 146 Z" fill="#20262B"/>
+  <!-- poles -->
+  <path d="M52 140 Q60 84 120 60 M188 140 Q180 84 120 60" stroke="#E8A24A" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+</svg><span class="badge"><span class="av"></span>זמין</span></div>
+            <div class="body">
+              <div class="cat-tag">קמפינג</div>
+              <div class="nm">אוהל ל-3 אנשים</div>
+              <div class="meta">1.1 ק"מ · ★ 4.8 (52)</div>
+              <button class="btn borrow">להשאלה</button>
+            </div>
+          </div>
+          <!-- stroller -->
+          <div class="prod">
+            <div class="ph bg-stroller"><svg class="pi" viewBox="0 0 240 180" fill="none" preserveAspectRatio="xMidYMid meet">
+  <ellipse cx="120" cy="160" rx="86" ry="9" fill="#000" opacity=".12"/>
+  <!-- wheels -->
+  <circle cx="72" cy="146" r="18" fill="#1B1E22"/><circle cx="72" cy="146" r="7" fill="#3A4046"/>
+  <circle cx="176" cy="146" r="14" fill="#1B1E22"/><circle cx="176" cy="146" r="5.5" fill="#3A4046"/>
+  <!-- frame -->
+  <path d="M70 146 L120 96 L150 66 M120 96 L176 146 M92 120 L168 120" stroke="#2B2F33" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- basket -->
+  <path d="M96 132 q28 10 60 0 l-6 12 q-24 6 -48 0 z" fill="#26292E"/>
+  <!-- seat + canopy -->
+  <path d="M96 118 L104 74 Q150 64 158 96 L150 120 Z" fill="#2B2F33"/>
+  <path d="M104 74 Q150 62 160 100 Q150 84 120 86 Q106 86 104 74 Z" fill="#3A4046"/>
+  <path d="M112 96 h34 v20 h-34 z" fill="#40464C"/>
+  <!-- handle -->
+  <path d="M150 66 q14 -2 16 8" stroke="#40464C" stroke-width="7" stroke-linecap="round" fill="none"/>
+</svg><span class="badge soon"><span class="av"></span>עד יום ג׳</span></div>
+            <div class="body">
+              <div class="cat-tag">ציוד לתינוקות</div>
+              <div class="nm">עגלת תינוק מתקפלת</div>
+              <div class="meta">3.0 ק"מ · ★ 5.0 (41)</div>
+              <button class="btn borrow">להשאלה</button>
+            </div>
+          </div>
+          <!-- game -->
+          <div class="prod">
+            <div class="ph bg-game"><svg class="pi" viewBox="0 0 240 180" fill="none" preserveAspectRatio="xMidYMid meet">
+  <ellipse cx="122" cy="156" rx="96" ry="12" fill="#000" opacity=".12"/>
+  <!-- board -->
+  <g transform="translate(52 70)">
+    <path d="M0 40 L86 8 L156 40 L70 78 Z" fill="#EAF0F5"/>
+    <path d="M0 40 L86 8 L156 40 L70 78 Z" fill="none" stroke="#2E7D32" stroke-width="0" />
+    <path d="M8 40 L86 15 L148 40 L70 70 Z" fill="#fff"/>
+    <path d="M20 40 L86 22 L136 40 L70 62 Z" fill="#EC4899" opacity=".22"/>
+    <path d="M40 40 L86 30 L118 40 L70 52 Z" fill="#5E35B1" opacity=".28"/>
+    <!-- pawns -->
+    <path d="M60 34 q6 0 6 6 q4 3 0 6 l-12 0 q-4-3 0-6 q0-6 6-6z" fill="#EC4899"/>
+    <path d="M96 30 q6 0 6 6 q4 3 0 6 l-12 0 q-4-3 0-6 q0-6 6-6z" fill="#5E35B1"/>
+    <path d="M82 48 q6 0 6 6 q4 3 0 6 l-12 0 q-4-3 0-6 q0-6 6-6z" fill="#2E7D32"/>
+    <path d="M118 40 q6 0 6 6 q4 3 0 6 l-12 0 q-4-3 0-6 q0-6 6-6z" fill="#F97316"/>
+  </g>
+  <!-- box -->
+  <g transform="translate(30 42)">
+    <path d="M0 22 L44 4 L86 20 L42 40 Z" fill="#7A4FD0"/>
+    <path d="M0 22 L42 40 L42 58 L0 40 Z" fill="#5E35B1"/>
+    <path d="M86 20 L42 40 L42 58 L86 38 Z" fill="#4C2A9E"/>
+    <circle cx="40" cy="22" r="8" fill="#FBE7F1"/><circle cx="40" cy="22" r="4" fill="#F97316"/>
+    <circle cx="22" cy="18" r="3" fill="#25B079"/><circle cx="60" cy="26" r="3" fill="#EC4899"/>
+  </g>
+  <!-- dice -->
+  <g transform="translate(150 96) rotate(12)">
+    <rect x="0" y="0" width="20" height="20" rx="5" fill="#fff" stroke="#E2E6EA"/>
+    <circle cx="6" cy="6" r="2" fill="#20242A"/><circle cx="14" cy="14" r="2" fill="#20242A"/><circle cx="10" cy="10" r="2" fill="#20242A"/>
+  </g>
+</svg><span class="badge"><span class="av"></span>זמין</span></div>
+            <div class="body">
+              <div class="cat-tag">משחקים</div>
+              <div class="nm">משחק קופסה משפחתי</div>
+              <div class="meta">0.6 ק"מ · ★ 4.9 (128)</div>
+              <button class="btn borrow">להשאלה</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- how it works -->
+      <div class="how">
+        <h3>איך זה עובד?</h3>
+        <div class="steps">
+          <div class="step">
+            <div class="n" style="background:var(--purple)">1</div>
+            <svg class="ic" viewBox="0 0 24 24" fill="none"><circle cx="10.5" cy="10.5" r="6.5" stroke="#5E35B1" stroke-width="2.2"/><path d="M15.5 15.5L21 21" stroke="#5E35B1" stroke-width="2.4" stroke-linecap="round"/></svg>
+            <div><b>מחפשים</b><span>מוצאים ציוד זמין ליד הבית</span></div>
+          </div>
+          <div class="step">
+            <div class="n" style="background:var(--orange)">2</div>
+            <svg class="ic" viewBox="0 0 24 24" fill="none"><path d="M3 8l9-4 9 4-9 4-9-4z" fill="#F97316"/><path d="M3 8v8l9 4V12L3 8z" fill="#F97316" opacity=".55"/><path d="M21 8v8l-9 4V12l9-4z" fill="#F97316" opacity=".8"/></svg>
+            <div><b>שואלים</b><span>מתאמים איסוף עם המשאיל</span></div>
+          </div>
+          <div class="step">
+            <div class="n" style="background:var(--green)">3</div>
+            <svg class="ic" viewBox="0 0 24 24" fill="none"><path d="M9 7L4 12l5 5" stroke="#2E7D32" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 12h10a6 6 0 016 6v1" stroke="#2E7D32" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div><b>מחזירים</b><span>מחזירים בזמן ונהנים שוב</span></div>
+          </div>
+        </div>
+        <button class="btn btn-green btn-sm" style="width:100%;justify-content:center;margin-top:10px">להתחיל עכשיו</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== BENEFITS ===================== -->
+  <section class="sec">
+    <div class="sec-head">
+      <div class="sec-title">למה להשאיל דרך השאילון?
+        <small>הצטרפו לתנועה שמשנה את הדרך שבה אנחנו צורכים</small>
+      </div>
+    </div>
+    <div class="bens">
+      <div class="ben">
+        <svg class="ic" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#FEEEDF"/><circle cx="12" cy="12" r="6.5" stroke="#F97316" stroke-width="2"/><path d="M12 9v6M10 11h3a1.3 1.3 0 010 2.6h-2.6M13 15h-3" stroke="#F97316" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <div><b>חוסכים כסף</b><span>שוכרים במקום לקנות ומשלמים רק על מה שצריך</span></div>
+      </div>
+      <div class="ben">
+        <svg class="ic" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#E7F3E8"/><path d="M17 7c-6 0-9 3-9 7 0 1 .3 2 .8 2.7M8 17c8 0 9-6 9-10-3 .5-5 1.5-6.5 3" stroke="#2E7D32" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div><b>שומרים על הסביבה</b><span>פחות ייצור ובזבוז, יותר שימוש חוזר וקיימות</span></div>
+      </div>
+      <div class="ben">
+        <svg class="ic" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#F3EEFB"/><circle cx="8.3" cy="9.6" r="2.3" fill="#5E35B1"/><circle cx="15.7" cy="9.6" r="2.3" fill="#7A4FD0"/><path d="M4.6 17.6c0-2.4 1.7-3.9 3.7-3.9s3.7 1.5 3.7 3.9z" fill="#5E35B1"/><path d="M12 17.6c0-2.4 1.7-3.9 3.7-3.9s3.7 1.5 3.7 3.9z" fill="#7A4FD0"/></svg>
+        <div><b>מחזקים את הקהילה</b><span>מכירים שכנים ובונים אמון שכונתי אמיתי</span></div>
+      </div>
+      <div class="ben">
+        <svg class="ic" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#FDECEF"/><path d="M12 6.5l1.7 3.5 3.8.5-2.8 2.7.7 3.8-3.4-1.8-3.4 1.8.7-3.8-2.8-2.7 3.8-.5L12 6.5z" fill="#EC4899"/></svg>
+        <div><b>גישה לציוד איכותי</b><span>נהנים ממותגים מובילים בלי מחיר מלא</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer>
+    <div class="logo" style="align-items:flex-start">
+      <div class="logo-row">
+        <svg class="hourglass" viewBox="0 0 34 26" fill="none" style="width:28px;height:22px">
+          <rect x="0" y="0" width="13" height="10" rx="2" fill="#F97316"/>
+          <rect x="14" y="0" width="3.2" height="10" fill="#5E35B1"/>
+          <rect x="18" y="0" width="3.2" height="10" fill="#5E35B1"/>
+          <path d="M22 0 h9 a2 2 0 0 1 2 2 v6 a2 2 0 0 1 -2 2 h-9 z" fill="#EC4899"/>
+        </svg>
+        <div class="logo-word" style="font-size:22px">השאילו<span class="dot">ן</span></div>
+      </div>
+      <div class="copy" style="margin-top:6px">© 2026 השאילון · כל הזכויות שמורות</div>
+    </div>
+    <div class="foot-links">
+      <a href="#">קטגוריות</a>
+      <a href="#">איך זה עובד</a>
+      <a href="#">אודות</a>
+      <a href="#">תנאי שימוש</a>
+      <a href="#">צור קשר</a>
+    </div>
+    <div style="display:flex;align-items:center;gap:18px">
+      <span class="copy">hello@hashailon.co.il</span>
+      <div class="socials">
+        <a href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="5" stroke="#5A6068" stroke-width="1.8"/><circle cx="12" cy="12" r="3.6" stroke="#5A6068" stroke-width="1.8"/><circle cx="17" cy="7" r="1.1" fill="#5A6068"/></svg></a>
+        <a href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M14 8h2V5h-2c-2 0-3.5 1.5-3.5 3.5V10H8v3h2.5v7h3v-7H16l.5-3h-3V8.7c0-.4.3-.7.5-.7z" fill="#5A6068"/></svg></a>
+        <a href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 6.5c-.7.3-1.4.5-2.2.6.8-.5 1.4-1.2 1.7-2.1-.8.5-1.6.8-2.5 1a3.6 3.6 0 00-6.1 3.3A10.2 10.2 0 014 5.6a3.6 3.6 0 001.1 4.8c-.6 0-1.1-.2-1.6-.4a3.6 3.6 0 002.9 3.5c-.5.2-1 .2-1.5.1a3.6 3.6 0 003.4 2.5A7.3 7.3 0 013 17.6 10.3 10.3 0 008.6 19c6.7 0 10.4-5.6 10.4-10.4v-.5c.7-.5 1.3-1.1 1.8-1.8z" fill="#5A6068"/></svg></a>
+      </div>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>
