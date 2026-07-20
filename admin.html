@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ניהול תוכן - P.prodactions</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #122418; color: #ECE3CB; font-family: Heebo, system-ui, sans-serif; min-height: 100vh; }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 32px 20px 80px; }
+  h1 { font-family: 'Cormorant Garamond', serif; font-size: 28px; color: #F4EAD0; margin: 0 0 6px; }
+  .sub { color: #7A8A7F; font-size: 13px; margin-bottom: 28px; }
+  .card { background: #1B2D22; border: 1px solid rgba(201,169,97,.25); border-radius: 12px; padding: 18px; margin-bottom: 18px; }
+  label { display: block; font-size: 12px; color: #4FB7A8; font-weight: 600; margin-bottom: 4px; margin-top: 12px; }
+  label:first-child { margin-top: 0; }
+  input, textarea, select { width: 100%; background: rgba(255,255,255,.05); border: 1px solid rgba(201,169,97,.25); border-radius: 8px; padding: 9px 12px; color: #ECE3CB; font-size: 14px; font-family: inherit; }
+  textarea { resize: vertical; min-height: 50px; }
+  button { cursor: pointer; border: none; border-radius: 8px; font-weight: 700; font-size: 14px; padding: 10px 18px; font-family: inherit; }
+  .btn-gold { background: #C9A961; color: #122418; }
+  .btn-ghost { background: transparent; color: #ECE3CB; border: 1px solid rgba(201,169,97,.35); }
+  .btn-danger { background: transparent; color: #e07a6b; border: 1px solid rgba(224,122,107,.4); }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .video-row { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
+  .video-row input { flex: 1 1 auto; }
+  .project { border-top: 1px solid rgba(201,169,97,.15); padding-top: 14px; margin-top: 14px; }
+  .project:first-of-type { border-top: none; padding-top: 0; margin-top: 0; }
+  .cat-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; color: #F4EAD0; margin: 32px 0 12px; }
+  .status { position: fixed; bottom: 16px; left: 16px; right: 16px; max-width: 680px; margin: 0 auto; padding: 12px 16px; border-radius: 8px; font-size: 14px; text-align: center; z-index: 50; }
+  .status.ok { background: #1e3b2a; color: #8fd4a8; border: 1px solid rgba(143,212,168,.3); }
+  .status.err { background: #2a1215; color: #ff8a80; border: 1px solid rgba(255,138,128,.3); }
+  #login { max-width: 340px; margin: 80px auto; text-align: center; }
+  #login input { margin-bottom: 14px; }
+  .hint { font-size: 12px; color: #7A8A7F; margin-top: 6px; }
+</style>
+</head>
+<body>
+<div id="login">
+  <h1>ניהול תוכן</h1>
+  <div class="sub">P.prodactions</div>
+  <input type="password" id="pw" placeholder="סיסמה">
+  <button class="btn-gold" id="loginBtn" style="width:100%">כניסה</button>
+  <div class="hint" id="loginErr"></div>
+</div>
+
+<div class="wrap" id="editor" style="display:none">
+  <h1>ניהול תוכן</h1>
+  <div class="sub">עריכת פרויקטים וסרטונים לאתר. לחצו "שמור שינויים" בסוף כדי לפרסם לכולם.</div>
+  <div id="categories"></div>
+  <div class="row" style="margin-top:24px">
+    <button class="btn-gold" id="saveBtn">שמור שינויים</button>
+    <button class="btn-ghost" id="reloadBtn">בטל שינויים / טען מחדש</button>
+  </div>
+</div>
+
+<div id="statusBox"></div>
+
+<script>
+const WORKER_URL = 'https://my-m-admin.YOUR-SUBDOMAIN.workers.dev';
+
+let password = '';
+let categories = [];
+
+const loginEl = document.getElementById('login');
+const editorEl = document.getElementById('editor');
+const catsEl = document.getElementById('categories');
+const statusBox = document.getElementById('statusBox');
+
+function showStatus(msg, ok) {
+  statusBox.innerHTML = '<div class="status ' + (ok ? 'ok' : 'err') + '">' + msg + '</div>';
+  if (ok) setTimeout(() => { statusBox.innerHTML = ''; }, 4000);
+}
+
+document.getElementById('loginBtn').onclick = async () => {
+  const pw = document.getElementById('pw').value;
+  document.getElementById('loginErr').textContent = 'בודק...';
+  try {
+    const res = await fetch(WORKER_URL + '/api/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pw }),
+    });
+    const data = await res.json();
+    if (data.ok) {
+      password = pw;
+      loginEl.style.display = 'none';
+      editorEl.style.display = 'block';
+      await loadData();
+    } else {
+      document.getElementById('loginErr').textContent = 'סיסמה שגויה';
+    }
+  } catch (e) {
+    document.getElementById('loginErr').textContent = 'שגיאת חיבור לשרת הניהול';
+  }
+};
+
+document.getElementById('reloadBtn').onclick = loadData;
+document.getElementById('saveBtn').onclick = saveData;
+
+async function loadData() {
+  const res = await fetch('./data.json?_=' + Date.now());
+  categories = await res.json();
+  render();
+}
+
+function render() {
+  catsEl.innerHTML = '';
+  categories.forEach((cat, ci) => {
+    const catHeader = document.createElement('div');
+    catHeader.className = 'cat-title';
+    catHeader.textContent = cat.label;
+    catsEl.appendChild(catHeader);
+
+    cat.projects.forEach((proj, pi) => {
+      catsEl.appendChild(renderProject(cat, ci, proj, pi));
+    });
+
+    const addBtn = document.createElement('button');
+    addBtn.className = 'btn-ghost';
+    addBtn.textContent = '+ הוסף פרויקט ל' + cat.label;
+    addBtn.onclick = () => {
+      cat.projects.push({ id: 'new-' + Date.now(), title: '', desc: '', cover: '', videos: [] });
+      render();
+    };
+    catsEl.appendChild(addBtn);
+  });
+}
+
+function renderProject(cat, ci, proj, pi) {
+  const wrap = document.createElement('div');
+  wrap.className = 'card project';
+
+  const title = field('שם הפרויקט', proj.title, v => proj.title = v);
+  const desc = field('תיאור', proj.desc, v => proj.desc = v, true);
+  const cover = field('שם קובץ תמונה (ב-assets/covers/, אופציונלי)', proj.cover || '', v => proj.cover = v);
+
+  wrap.appendChild(title);
+  wrap.appendChild(desc);
+  wrap.appendChild(cover);
+
+  const vidLabel = document.createElement('label');
+  vidLabel.textContent = 'סרטוני יוטיוב';
+  wrap.appendChild(vidLabel);
+
+  const videos = normalizeVideos(proj);
+  proj.videos = videos;
+  delete proj.ytId;
+
+  const vidList = document.createElement('div');
+  videos.forEach((v, vi) => vidList.appendChild(videoRow(videos, vi)));
+  wrap.appendChild(vidList);
+
+  const addVidBtn = document.createElement('button');
+  addVidBtn.className = 'btn-ghost';
+  addVidBtn.style.marginTop = '8px';
+  addVidBtn.textContent = '+ הוסף סרטון';
+  addVidBtn.onclick = () => {
+    videos.push({ url: '', name: 'סרטון ' + (videos.length + 1) });
+    render();
+  };
+  wrap.appendChild(addVidBtn);
+
+  const removeProjBtn = document.createElement('button');
+  removeProjBtn.className = 'btn-danger';
+  removeProjBtn.style.marginTop = '14px';
+  removeProjBtn.textContent = 'מחק פרויקט';
+  removeProjBtn.onclick = () => {
+    if (confirm('למחוק את "' + (proj.title || 'הפרויקט') + '"?')) {
+      cat.projects.splice(pi, 1);
+      render();
+    }
+  };
+  wrap.appendChild(removeProjBtn);
+
+  return wrap;
+}
+
+function videoRow(videos, vi) {
+  const row = document.createElement('div');
+  row.className = 'video-row';
+
+  const nameInput = document.createElement('input');
+  nameInput.placeholder = 'שם הסרטון';
+  nameInput.value = videos[vi].name || '';
+  nameInput.style.flex = '0 1 140px';
+  nameInput.oninput = () => videos[vi].name = nameInput.value;
+
+  const urlInput = document.createElement('input');
+  urlInput.placeholder = 'קישור יוטיוב';
+  urlInput.value = videos[vi].url || '';
+  urlInput.oninput = () => videos[vi].url = urlInput.value;
+
+  const del = document.createElement('button');
+  del.className = 'btn-danger';
+  del.textContent = '✕';
+  del.style.flex = '0 0 auto';
+  del.onclick = () => {
+    videos.splice(vi, 1);
+    render();
+  };
+
+  row.appendChild(nameInput);
+  row.appendChild(urlInput);
+  row.appendChild(del);
+  return row;
+}
+
+function normalizeVideos(proj) {
+  if (proj.videos && proj.videos.length) return proj.videos;
+  if (proj.ytId) return [{ url: 'https://youtu.be/' + proj.ytId, name: proj.title || 'סרטון 1' }];
+  return [];
+}
+
+function field(labelText, value, onChange, multiline) {
+  const box = document.createElement('div');
+  const label = document.createElement('label');
+  label.textContent = labelText;
+  box.appendChild(label);
+  const input = document.createElement(multiline ? 'textarea' : 'input');
+  input.value = value || '';
+  input.oninput = () => onChange(input.value);
+  box.appendChild(input);
+  return box;
+}
+
+async function saveData() {
+  document.getElementById('saveBtn').disabled = true;
+  showStatus('שומר...', true);
+  // clean up empty video entries and drop the temp "new-" ids so GitHub gets clean data
+  const cleaned = categories.map(cat => ({
+    ...cat,
+    projects: cat.projects.map(p => {
+      const { ytId, ...rest } = p;
+      return { ...rest, videos: (rest.videos || []).filter(v => v.url && v.url.trim()) };
+    }),
+  }));
+  try {
+    const res = await fetch(WORKER_URL + '/api/save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password, categories: cleaned }),
+    });
+    const data = await res.json();
+    if (data.ok) {
+      showStatus('נשמר בהצלחה! השינויים יופיעו באתר תוך דקה-שתיים.', true);
+    } else {
+      showStatus('שגיאה: ' + (data.error || 'לא ידוע'), false);
+    }
+  } catch (e) {
+    showStatus('שגיאת חיבור לשרת הניהול', false);
+  }
+  document.getElementById('saveBtn').disabled = false;
+}
+</script>
+</body>
+</html>
