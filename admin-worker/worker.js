@@ -61,7 +61,8 @@ export default {
         const current = await getRes.json();
         const sha = current.sha;
 
-        const newContent = JSON.stringify(body.categories, null, 2) + '\n';
+        const payload = { clients: Array.isArray(body.clients) ? body.clients : [], categories: body.categories };
+        const newContent = JSON.stringify(payload, null, 2) + '\n';
         const encoded = btoa(unescape(encodeURIComponent(newContent)));
 
         const putRes = await fetch(
